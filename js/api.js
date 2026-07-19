@@ -1,7 +1,7 @@
 // IT Asset Management - API Client
 // Menggantikan google.script.run untuk komunikasi dengan GAS Backend
 
-const GAS_WEB_APP_URL = "YOUR_GAS_WEB_APP_URL_HERE"; // Ganti dengan URL hasil deploy "Anyone"
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzU4KVsscT4AG1j5TnX06bRLT8p6g7artajHyQzljkx2c-_eWjWw60crIjjM0zsGDhdTA/exec"; // Ganti dengan URL hasil deploy "Anyone"
 
 const API = {
     /**
