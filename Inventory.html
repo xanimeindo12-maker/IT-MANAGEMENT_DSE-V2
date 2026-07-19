@@ -1,0 +1,49 @@
+<div id="inventory-content" class="hidden space-y-6 w-full">
+  <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-4">
+    <h2 class="text-2xl font-bold text-brand-primary">Inventory & Assets</h2>
+    <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      <input type="text" id="inventory-search" placeholder="Search assets..."
+        class="pl-10 pr-4 py-2 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm w-64 transition-all">
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-gray-600">
+        <thead class="bg-gray-50 text-xs uppercase text-gray-700 border-b border-gray-100">
+          <tr>
+            <th class="px-4 py-4 font-bold w-12 text-center whitespace-nowrap">NO</th>
+            <th class="px-6 py-4 font-bold">Host Name</th>
+            <th class="px-6 py-4 font-bold">Serial Number</th>
+            <th class="px-6 py-4 font-bold">Assigned To</th>
+            <th class="px-6 py-4 font-bold">Department</th>
+            <th class="px-6 py-4 font-bold">Model</th>
+            <th class="px-6 py-4 font-bold">Status</th>
+          </tr>
+        </thead>
+        <tbody id="inventory-table-body" class="divide-y divide-gray-100 bg-white">
+          <!-- JS akan merender list kesini -->
+          <tr>
+            <td colspan="7" class="px-6 py-4 text-center text-gray-500">Loading inventory data...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Pagination Controls -->
+    <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
+      <span id="pagination-info" class="text-sm text-gray-600 font-medium">Showing 0 to 0 of 0 entries</span>
+      <div class="flex gap-2 items-center">
+        <button id="prev-page-btn" onclick="prevPage()"
+          class="px-4 py-2 text-sm font-bold rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-accent hover:border-brand-accent hover:text-brand-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+
+        <div id="pagination-numbers" class="flex gap-1">
+          <!-- Numbers will be rendered here -->
+        </div>
+
+        <button id="next-page-btn" onclick="nextPage()"
+          class="px-4 py-2 text-sm font-bold rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-accent hover:border-brand-accent hover:text-brand-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+      </div>
+    </div>
+  </div>
+</div>

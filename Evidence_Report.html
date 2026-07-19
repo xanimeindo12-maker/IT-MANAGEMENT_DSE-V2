@@ -1,0 +1,68 @@
+<div id="evidence-content" class="space-y-6 w-full pb-10">
+  
+  <!-- Header Title -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 border-b border-gray-100 pb-5">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary tracking-tight">Evidence Activity</h2>
+      <p class="text-xs text-brand-muted mt-1">Dokumentasi Foto dan Verifikasi Operasional Harian Lapangan</p>
+    </div>
+    
+    <!-- Quick Stats Widget -->
+    <div class="flex items-center gap-3">
+      <div class="bg-white border border-gray-100 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+        <div class="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+          <i class="fa-solid fa-file-circle-check text-base"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Total Terverifikasi</p>
+          <p id="evidence-stats-count" class="text-lg font-extrabold text-brand-primary leading-none">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filters Container -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col md:flex-row md:items-center gap-4">
+    <!-- Live Search -->
+    <div class="relative flex-1">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+      <input type="text" id="evidence-search-input" placeholder="Cari berdasarkan Host Name, User, atau Engineer..."
+        class="w-full pl-11 pr-4 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all placeholder:text-gray-400">
+    </div>
+    
+    <!-- Category Filter Dropdown -->
+    <div class="w-full md:w-56">
+      <select id="evidence-category-filter"
+        class="w-full px-3 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all text-gray-600 bg-white">
+        <option value="ALL">Semua Kategori</option>
+        <option value="Troubleshooting">Troubleshooting</option>
+        <option value="Service">Service</option>
+        <option value="Other">Other / Lainnya</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Evidence Grid Container -->
+  <div id="evidence-grid-wrapper" class="relative min-h-[300px]">
+    <!-- Loading State -->
+    <div id="evidence-loading" class="flex flex-col items-center justify-center py-16 gap-3">
+      <i class="fa-solid fa-spinner animate-spin text-3xl text-brand-accent"></i>
+      <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Memuat Dokumentasi Foto...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div id="evidence-empty" class="hidden flex-col items-center justify-center py-20 text-center">
+      <div class="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center text-brand-primary text-3xl mb-4 shadow-inner">
+        <i class="fa-solid fa-images text-blue-300"></i>
+      </div>
+      <h3 class="text-base font-bold text-brand-primary">Tidak Ada Foto Bukti</h3>
+      <p class="text-xs text-gray-400 mt-1 max-w-sm">Belum ada aktivitas yang diunggah bukti fotonya untuk pencarian ini.</p>
+    </div>
+
+    <!-- Grid Gallery -->
+    <div id="evidence-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Cards will be dynamically rendered here -->
+    </div>
+  </div>
+
+</div>

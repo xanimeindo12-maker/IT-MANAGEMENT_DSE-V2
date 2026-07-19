@@ -1,0 +1,285 @@
+<div class="space-y-6 w-full pb-10">
+  <!-- Header with Add Button -->
+  <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary">Daily Activity Logs</h2>
+      <p class="text-brand-muted text-sm font-medium">Digitalized Operational Activity Management</p>
+    </div>
+    <button onclick="openLogModal()"
+      class="bg-brand-primary hover:bg-blue-800 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2 group">
+      <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform"></i>
+      Add New Activity
+    </button>
+  </div>
+
+  <!-- Full-Width Data Stream -->
+  <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-list-ul text-brand-primary"></i>
+        <h3 class="font-bold text-brand-primary uppercase text-xs tracking-widest">Master Activity Stream</h3>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
+        <span class="text-[10px] text-green-700 font-black">REAL-TIME DATA FEED</span>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-gray-600">
+        <thead class="bg-gray-50/50 text-gray-700 border-b border-gray-100">
+          <tr>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider w-16 text-center">NO</th>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider w-32">Date</th>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Asset Number</th>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Name / User</th>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Divisi</th>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Category</th>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider text-center">Time (Start-End)</th>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider text-center">Actual (Min)</th>
+            <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Engineer</th>
+          </tr>
+        </thead>
+        <tbody id="activity-logs-body" class="divide-y divide-gray-50">
+          <!-- Populated by JS -->
+          <tr>
+            <td colspan="9" class="px-6 py-12 text-center text-gray-400">
+              <i class="fa-solid fa-spinner animate-spin text-3xl mb-4"></i>
+              <p>Fetching activity logs...</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Pagination Controls for Logs -->
+    <div id="log-pagination" class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+      <span id="log-pagination-info" class="text-sm text-gray-600 font-medium">Showing 0 to 0 of 0 entries</span>
+      <div class="flex gap-2 items-center">
+        <button id="log-prev-btn" onclick="prevLogPage()"
+          class="px-4 py-2 text-sm font-bold rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-accent hover:border-brand-accent hover:text-brand-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+
+        <div id="log-pagination-numbers" class="flex gap-1">
+          <!-- Numbers will be rendered here -->
+        </div>
+
+        <button id="log-next-btn" onclick="nextLogPage()"
+          class="px-4 py-2 text-sm font-bold rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-accent hover:border-brand-accent hover:text-brand-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL POPUP FORM -->
+  <div id="log-modal"
+    class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-brand-primary/40 backdrop-blur-sm transition-all duration-300">
+    <div
+      class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 modal-container">
+      <!-- Modal Header -->
+      <div class="bg-brand-primary p-6 text-white flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 p-2 rounded-xl">
+            <i class="fa-solid fa-file-circle-plus text-xl text-brand-accent"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold">New Activity Log</h3>
+            <p class="text-blue-200 text-xs font-medium">Record new maintenance or repair activity</p>
+          </div>
+        </div>
+        <button onclick="closeLogModal()" class="text-white/60 hover:text-white transition-colors">
+          <i class="fa-solid fa-circle-xmark text-2xl"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Form) -->
+      <div class="p-8 max-h-[80vh] overflow-y-auto">
+        <form id="log-form" onsubmit="submitLog(event)" class="space-y-6">
+          <!-- Row 1: Basic Info -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Activity
+                Date</label>
+              <input type="date" id="log-date" required
+                class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm">
+            </div>
+            <div>
+              <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Asset
+                Number</label>
+              <select id="log-device" required onchange="autoFillAsset(this.value)"
+                class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm">
+                <option value="">Select Asset...</option>
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Lead Engineer</label>
+              <select id="log-engineer" required
+                class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm">
+                <option value="MUHAMMAD TAUFIK">MUHAMMAD TAUFIK</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 2: Asset Details (Auto-filled) -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-blue-50/50 rounded-2xl border border-blue-100/50 shadow-inner">
+            <div>
+              <label class="block text-[10px] font-black text-blue-400 uppercase mb-1 tracking-tighter">User /
+                Assignee</label>
+              <input type="text" id="log-username" readonly
+                class="w-full px-3 py-2 bg-transparent border-b border-blue-200 text-blue-900 font-bold outline-none text-sm transition-all duration-300">
+            </div>
+            <div>
+              <label class="block text-[10px] font-black text-blue-400 uppercase mb-1 tracking-tighter">Dept /
+                Divisi</label>
+              <input type="text" id="log-divisi" readonly
+                class="w-full px-3 py-2 bg-transparent border-b border-blue-200 text-blue-900 font-bold outline-none text-sm transition-all duration-300">
+            </div>
+            <div>
+              <label class="block text-[10px] font-black text-blue-400 uppercase mb-1 tracking-tighter">Asset Location</label>
+              <select id="log-lokasi" required
+                class="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm transition-all duration-300">
+                <option value="">Select Location...</option>
+                <option value="MEETING">MEETING</option>
+                <option value="MIO">MIO</option>
+                <option value="IT">IT</option>
+                <option value="OFFICE UTAMA">OFFICE UTAMA</option>
+                <option value="TYER">TYER</option>
+                <option value="PLANT">PLANT</option>
+                <option value="MDVR">MDVR</option>
+                <option value="SECURITY">SECURITY</option>
+                <option value="SSE">SSE</option>
+                <option value="OTD">OTD</option>
+                <option value="SERTIFIKASI">SERTIFIKASI</option>
+                <option value="PRODUKSI">PRODUKSI</option>
+                <option value="SMART REFUELING">SMART REFUELING</option>
+                <option value="OFFICE SM">OFFICE SM</option>
+                <option value="WAREHOUSE SM">WAREHOUSE SM</option>
+                <option value="MABES PSV">MABES PSV</option>
+                <option value="MANDALIKA">MANDALIKA</option>
+                <option value="MESS SKYVIEW">MESS SKYVIEW</option>
+                <option value="KPCS">KPCS</option>
+                <option value="MAINTANK">MAINTANK</option>
+                <option value="KLINIK BTSJ">KLINIK BTSJ</option>
+                <option value="TOOLROOM PLANT">TOOLROOM PLANT</option>
+                <option value="SP">SP</option>
+                <option value="BLASTING">BLASTING</option>
+                <option value="ADM PLANT">ADM PLANT</option>
+                <option value="R. GS BAWAH">R. GS BAWAH</option>
+                <option value="PPD">PPD</option>
+                <option value="PLANNER">PLANNER</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 3: Problems & Solutions -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label
+                  class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Category</label>
+                <select id="log-category" required
+                  class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm">
+                  <option value="Troubleshooting">Troubleshooting</option>
+                  <option value="Service">Service</option>
+                  <option value="-">-</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Initial
+                  Problem Report</label>
+                <textarea id="log-problem" required rows="2" placeholder="..."
+                  class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm"></textarea>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Activity
+                  Detail</label>
+                <textarea id="log-activity" required rows="2" placeholder="..."
+                  class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm"></textarea>
+              </div>
+              <div>
+                <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Corrective
+                  Action / Solution</label>
+                <textarea id="log-corrective" required rows="2" placeholder="..."
+                  class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 4: Time Control & Evidence Upload -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-100">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Start
+                  Time</label>
+                <input type="time" id="log-start" required onchange="calculateDuration()"
+                  class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none">
+              </div>
+              <div>
+                <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">End
+                  Time</label>
+                <input type="time" id="log-end" required onchange="calculateDuration()"
+                  class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none">
+              </div>
+            </div>
+            <div>
+              <label
+                class="block text-[10px] font-black text-brand-primary uppercase mb-1 tracking-tighter font-bold">Total
+                Duration (Minutes)</label>
+              <div class="flex items-center gap-3">
+                <input type="number" id="log-actual" readonly
+                  class="w-full px-3 py-2 bg-brand-primary/5 border border-brand-primary/20 rounded-xl font-black text-brand-primary text-xl outline-none text-center">
+                <span class="text-xs font-bold text-gray-400 uppercase">Min</span>
+              </div>
+            </div>
+            <div class="flex items-end">
+              <!-- Placeholder for alignment -->
+            </div>
+          </div>
+
+          <!-- Row 5: Evidence Photo Upload -->
+          <div class="pt-4 border-t border-gray-100">
+            <label class="block text-[10px] font-black text-gray-400 uppercase mb-2 tracking-tighter">
+              <i class="fa-solid fa-camera-retro mr-1 text-brand-primary"></i> Evidence Photo (Optional)
+            </label>
+            <div class="flex flex-col md:flex-row items-start gap-4">
+              <div class="flex-1 w-full">
+                <label for="log-evidence"
+                  class="flex flex-col items-center justify-center w-full h-28 bg-gray-50 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer hover:bg-blue-50/50 hover:border-brand-primary/40 transition-all duration-200 group">
+                  <div class="flex flex-col items-center justify-center pt-3 pb-3">
+                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 group-hover:text-brand-primary transition-colors mb-1"></i>
+                    <p class="text-xs text-gray-500 group-hover:text-brand-primary transition-colors">
+                      <span class="font-bold">Klik untuk upload</span> atau drag & drop
+                    </p>
+                    <p class="text-[10px] text-gray-400">PNG, JPG, JPEG (Max 5MB)</p>
+                  </div>
+                  <input type="file" id="log-evidence" accept="image/png,image/jpeg,image/jpg" class="hidden"
+                    onchange="previewEvidence(this)" />
+                </label>
+              </div>
+              <!-- Preview Thumbnail -->
+              <div id="evidence-preview-wrap" class="hidden flex-shrink-0">
+                <div class="relative group">
+                  <img id="evidence-preview" src="" alt="Preview"
+                    class="w-28 h-28 object-cover rounded-2xl border-2 border-brand-primary/20 shadow-md" />
+                  <button type="button" onclick="clearEvidence()"
+                    class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors opacity-0 group-hover:opacity-100">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                  </button>
+                  <p id="evidence-filename" class="text-[10px] text-gray-500 mt-1 text-center truncate max-w-[7rem]"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 6: Submit Button -->
+          <div class="pt-4">
+            <button type="submit"
+              class="w-full bg-brand-primary hover:bg-blue-800 text-white font-bold py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all flex justify-center items-center gap-2">
+              <i class="fa-solid fa-check-circle"></i> Save Activity Log
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

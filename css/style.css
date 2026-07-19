@@ -1,0 +1,266 @@
+  body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F9FAFB;
+      color: #1F2937;
+  }
+
+  /* Livin' style gradient border utility */
+  .border-gradient-livin {
+      position: relative;
+      border-radius: 1rem;
+      background: #FFFFFF;
+      background-clip: padding-box;
+      border: solid 2px transparent;
+  }
+
+  .border-gradient-livin::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+      margin: -2px;
+      /* same as border width */
+      border-radius: inherit;
+      background: linear-gradient(to right, #004684, #FDB813);
+  }
+
+  /* Loading Spinner CSS */
+  .loader {
+      border: 3px solid rgba(0, 70, 132, 0.1);
+      /* brand primary with opacity */
+      border-radius: 50%;
+      border-top: 3px solid #004684;
+      /* brand primary */
+      width: 24px;
+      height: 24px;
+      -webkit-animation: spin 1s linear infinite;
+      animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+      0% {
+          transform: rotate(0deg);
+      }
+
+      100% {
+          transform: rotate(360deg);
+      }
+  }
+
+  /* Custom Scrollbar for Sidebar & Content */
+  ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+      background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background: #E5E7EB;
+      border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+      background: #D1D5DB;
+  }
+
+  /* ═══════════════════════════════════════════ */
+  /*  PREMIUM SIDEBAR STYLES                    */
+  /* ═══════════════════════════════════════════ */
+
+  /* Sidebar Width States */
+  .sidebar-expanded {
+      width: 16.5rem;
+      /* ~264px */
+  }
+
+  .sidebar-collapsed {
+      width: 4.5rem;
+      /* ~72px */
+  }
+
+  /* Hide text labels when collapsed */
+  .sidebar-collapsed .sidebar-label {
+      display: none !important;
+  }
+
+  /* Center icon when collapsed */
+  .sidebar-collapsed .sidebar-menu {
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+  }
+
+  .sidebar-collapsed .sidebar-menu-icon-wrap {
+      margin: 0;
+  }
+
+  /* Rotate collapse icon */
+  .sidebar-collapsed .sidebar-collapse-icon {
+      transform: rotate(180deg);
+  }
+
+  /* Hide dropdown when sidebar collapsed */
+  .sidebar-collapsed #inventory-dropdown {
+      max-height: 0 !important;
+      opacity: 0 !important;
+  }
+
+  /* Category Header — semi-transparent blue text */
+  .sidebar-category-header {
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(191, 219, 254, 0.6);
+      /* text-blue-200/60 */
+      padding: 0.5rem 0.75rem 0.375rem;
+      user-select: none;
+  }
+
+  /* Menu Item Base */
+  .sidebar-menu {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: 0.625rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      position: relative;
+  }
+
+  /* Default (inactive) menu state */
+  .sidebar-menu-default {
+      color: #bfdbfe;
+      /* blue-200 */
+      background: transparent;
+  }
+
+  .sidebar-menu-default:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.07);
+      border-left-color: rgba(253, 184, 19, 0.3);
+  }
+
+  /* Active menu state — Amber Gold left border accent */
+  .sidebar-menu-active {
+      color: #FDB813 !important;
+      background: rgba(253, 184, 19, 0.08) !important;
+      border-left-color: #FDB813 !important;
+      font-weight: 700 !important;
+  }
+
+  .sidebar-menu-active .sidebar-menu-icon-wrap {
+      background: rgba(253, 184, 19, 0.15);
+      color: #FDB813;
+  }
+
+  /* Menu icon wrapper */
+  .sidebar-menu-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(191, 219, 254, 0.7);
+      /* blue-200/70 */
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+  }
+
+  .sidebar-menu-default:hover .sidebar-menu-icon-wrap {
+      background: rgba(253, 184, 19, 0.12);
+      color: #FDB813;
+  }
+
+  /* Menu text */
+  .sidebar-menu-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+
+  /* Submenu Items */
+  .sidebar-submenu {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.6875rem;
+      color: rgba(191, 219, 254, 0.5);
+      /* blue-200/50 */
+      text-decoration: none;
+      transition: all 0.15s ease;
+  }
+
+  .sidebar-submenu:hover {
+      color: #FDB813;
+      background: rgba(255, 255, 255, 0.04);
+  }
+
+  .sidebar-submenu-text {
+      white-space: nowrap;
+  }
+
+  /* ═══ Dropdown Sub-menu Styles ═══ */
+
+  /* Sub-menu item active state — Amber Gold accent */
+  .sidebar-submenu-item.submenu-active {
+      color: #FDB813 !important;
+      background: rgba(253, 184, 19, 0.06);
+      font-weight: 600;
+  }
+
+  .sidebar-submenu-item.submenu-active .submenu-dot {
+      background: #FDB813 !important;
+      box-shadow: 0 0 6px rgba(253, 184, 19, 0.4);
+  }
+
+  /* Dropdown chevron default color */
+  .sidebar-dropdown-chevron {
+      color: rgba(191, 219, 254, 0.4);
+      /* blue-200/40 */
+  }
+
+  /* When parent menu is active, chevron turns amber */
+  .sidebar-menu-active .sidebar-dropdown-chevron {
+      color: #FDB813;
+  }
+
+  /* Hide dropdown panels when sidebar is collapsed */
+  .sidebar-collapsed .sidebar-dropdown-panel {
+      max-height: 0 !important;
+      opacity: 0 !important;
+      overflow: hidden;
+  }
+
+  /* Custom scrollbar for sidebar nav */
+  .sidebar-nav-scroll::-webkit-scrollbar {
+      width: 3px;
+  }
+
+  .sidebar-nav-scroll::-webkit-scrollbar-track {
+      background: transparent;
+  }
+
+  .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+  }
+
+  .sidebar-nav-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+  }

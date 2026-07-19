@@ -1,0 +1,185 @@
+<div class="space-y-6 w-full">
+  <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-4">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary">PA Performance Analytics</h2>
+      <p class="text-brand-muted text-sm font-medium">Dynamic Unit-Based MOHH Analytics</p>
+    </div>
+  </div>
+
+  <!-- Row 1: Four Weekly PA Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <!-- Card: W1 -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[140px] hover:shadow-md transition-all duration-200">
+      <div class="flex justify-between items-start">
+        <p class="text-brand-muted text-[11px] font-semibold uppercase tracking-wider">WEEKLY PA (W1)</p>
+        <span class="text-[9px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-wide">Week 1</span>
+      </div>
+      <div class="mt-4">
+        <h4 id="pa-w1-percent" class="text-3xl font-black text-brand-primary">100%</h4>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1">Status: <span id="pa-w1-status" class="font-bold text-emerald-500">Excellent</span></p>
+      </div>
+    </div>
+
+    <!-- Card: W2 -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[140px] hover:shadow-md transition-all duration-200">
+      <div class="flex justify-between items-start">
+        <p class="text-brand-muted text-[11px] font-semibold uppercase tracking-wider">WEEKLY PA (W2)</p>
+        <span class="text-[9px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-wide">Week 2</span>
+      </div>
+      <div class="mt-4">
+        <h4 id="pa-w2-percent" class="text-3xl font-black text-brand-primary">100%</h4>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1">Status: <span id="pa-w2-status" class="font-bold text-emerald-500">Excellent</span></p>
+      </div>
+    </div>
+
+    <!-- Card: W3 -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[140px] hover:shadow-md transition-all duration-200">
+      <div class="flex justify-between items-start">
+        <p class="text-brand-muted text-[11px] font-semibold uppercase tracking-wider">WEEKLY PA (W3)</p>
+        <span class="text-[9px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-wide">Week 3</span>
+      </div>
+      <div class="mt-4">
+        <h4 id="pa-w3-percent" class="text-3xl font-black text-brand-primary">100%</h4>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1">Status: <span id="pa-w3-status" class="font-bold text-emerald-500">Excellent</span></p>
+      </div>
+    </div>
+
+    <!-- Card: W4 -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[140px] hover:shadow-md transition-all duration-200">
+      <div class="flex justify-between items-start">
+        <p class="text-brand-muted text-[11px] font-semibold uppercase tracking-wider">WEEKLY PA (W4)</p>
+        <span class="text-[9px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-wide">Week 4</span>
+      </div>
+      <div class="mt-4">
+        <h4 id="pa-w4-percent" class="text-3xl font-black text-brand-primary">100%</h4>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1">Status: <span id="pa-w4-status" class="font-bold text-emerald-500">Excellent</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Total PA All (MTD) - Full Width Premium banner card -->
+  <div class="bg-brand-primary rounded-2xl p-6 shadow-md relative overflow-hidden text-white group flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
+    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+      <i class="fa-solid fa-gauge-high text-9xl"></i>
+    </div>
+    <div class="space-y-1.5 z-10">
+      <p class="text-blue-200 text-[10px] font-bold uppercase tracking-widest">TOTAL PERFORMANCE ACCUMULATION</p>
+      <h3 class="text-2xl font-black text-white">TOTAL PA ALL (MTD)</h3>
+      <p class="text-xs text-blue-200/80 font-medium max-w-2xl">Rata-rata akumulasi ketersediaan fisik perangkat (Physical Availability) bulan ini berdasarkan histori aktivitas Troubleshooting dan Maintenance.</p>
+    </div>
+    <div class="flex items-center gap-6 z-10 self-end md:self-auto">
+      <div class="text-right">
+        <span class="text-[9px] text-blue-900 font-black uppercase tracking-wider bg-brand-accent px-2.5 py-1 rounded shadow-sm">Month-to-Date</span>
+        <div class="text-xs text-blue-200/80 font-semibold mt-2 space-y-1">
+          <div>● Total Activity: <span id="pa-total-activities" class="font-bold text-brand-accent">0</span> Logs (Troubleshooting & PM)</div>
+          <div>● Duration: <span id="pa-total-hours" class="font-bold text-brand-accent">0.0</span> Hrs (<span id="pa-total-minutes" class="font-bold text-brand-accent">0</span> Mins)</div>
+        </div>
+      </div>
+      <div class="border-l border-blue-500/30 h-14 hidden md:block"></div>
+      <div class="flex items-center">
+        <h4 id="pa-mtd-percent" class="text-5xl md:text-6xl font-black text-white leading-none tracking-tight">0%</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2.5: Detailed Excel-Style PA Comparison Tables (Premium Redesign) -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Table 1: PA Troubleshooting -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200">
+      <div class="flex items-center justify-between mb-4 border-b border-gray-50 pb-3">
+        <h3 class="text-sm font-bold text-brand-primary flex items-center gap-2">
+          <span class="w-1.5 h-4 bg-brand-primary rounded-full"></span>
+          PA TROUBLESHOOTING
+        </h3>
+        <span class="text-[9px] text-brand-muted font-bold tracking-wider uppercase bg-gray-50 px-2 py-0.5 rounded border border-gray-100">Trouble Log Stats</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-brand-primary text-white text-[10px] font-bold uppercase tracking-wider">
+              <th class="py-2.5 px-3 rounded-l-lg" id="th-trouble-month">MEI</th>
+              <th class="py-2.5 px-3">MOHH</th>
+              <th class="py-2.5 px-3">Downtime (Min)</th>
+              <th class="py-2.5 px-3 rounded-r-lg text-right">PA TROUBLESHOOTING</th>
+            </tr>
+          </thead>
+          <tbody class="text-xs text-brand-dark divide-y divide-gray-100 font-semibold" id="table-trouble-body">
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W1</td><td class="py-2.5 px-3" id="trouble-w1-mohh">-</td><td class="py-2.5 px-3" id="trouble-w1-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="trouble-w1-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W2</td><td class="py-2.5 px-3" id="trouble-w2-mohh">-</td><td class="py-2.5 px-3" id="trouble-w2-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="trouble-w2-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W3</td><td class="py-2.5 px-3" id="trouble-w3-mohh">-</td><td class="py-2.5 px-3" id="trouble-w3-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="trouble-w3-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W4</td><td class="py-2.5 px-3" id="trouble-w4-mohh">-</td><td class="py-2.5 px-3" id="trouble-w4-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="trouble-w4-pa">-</td></tr>
+            <tr class="bg-brand-primary/5 font-bold border-t border-brand-primary/10"><td class="py-2.5 px-3 text-brand-primary font-black">MTD</td><td class="py-2.5 px-3" id="trouble-mtd-mohh">-</td><td class="py-2.5 px-3" id="trouble-mtd-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-black" id="trouble-mtd-pa">-</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Table 2: PA Maintenance -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200">
+      <div class="flex items-center justify-between mb-4 border-b border-gray-50 pb-3">
+        <h3 class="text-sm font-bold text-brand-primary flex items-center gap-2">
+          <span class="w-1.5 h-4 bg-brand-primary rounded-full"></span>
+          PA MAINTENANCE
+        </h3>
+        <span class="text-[9px] text-brand-muted font-bold tracking-wider uppercase bg-gray-50 px-2 py-0.5 rounded border border-gray-100">Service Log Stats</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-brand-primary text-white text-[10px] font-bold uppercase tracking-wider">
+              <th class="py-2.5 px-3 rounded-l-lg" id="th-maint-month">MEI</th>
+              <th class="py-2.5 px-3">MOHH</th>
+              <th class="py-2.5 px-3">Downtime (Min)</th>
+              <th class="py-2.5 px-3 rounded-r-lg text-right">PA MAINTENANCE</th>
+            </tr>
+          </thead>
+          <tbody class="text-xs text-brand-dark divide-y divide-gray-100 font-semibold" id="table-maint-body">
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W1</td><td class="py-2.5 px-3" id="maint-w1-mohh">-</td><td class="py-2.5 px-3" id="maint-w1-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="maint-w1-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W2</td><td class="py-2.5 px-3" id="maint-w2-mohh">-</td><td class="py-2.5 px-3" id="maint-w2-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="maint-w2-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W3</td><td class="py-2.5 px-3" id="maint-w3-mohh">-</td><td class="py-2.5 px-3" id="maint-w3-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="maint-w3-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W4</td><td class="py-2.5 px-3" id="maint-w4-mohh">-</td><td class="py-2.5 px-3" id="maint-w4-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="maint-w4-pa">-</td></tr>
+            <tr class="bg-brand-primary/5 font-bold border-t border-brand-primary/10"><td class="py-2.5 px-3 text-brand-primary font-black">MTD</td><td class="py-2.5 px-3" id="maint-mtd-mohh">-</td><td class="py-2.5 px-3" id="maint-mtd-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-black" id="maint-mtd-pa">-</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2.6: Centered PA All Table -->
+  <div class="flex justify-center mb-6">
+    <div class="w-full lg:w-1/2 bg-white rounded-2xl p-5 border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200">
+      <div class="flex items-center justify-between mb-4 border-b border-gray-50 pb-3">
+        <h3 class="text-sm font-bold text-brand-primary flex items-center gap-2">
+          <span class="w-1.5 h-4 bg-brand-primary rounded-full"></span>
+          PA ALL OVERVIEW
+        </h3>
+        <span class="text-[9px] text-brand-muted font-bold tracking-wider uppercase bg-gray-50 px-2 py-0.5 rounded border border-gray-100">Combined Average</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-brand-primary text-white text-[10px] font-bold uppercase tracking-wider">
+              <th class="py-2.5 px-4 rounded-l-lg" id="th-all-month">MEI</th>
+              <th class="py-2.5 px-4 rounded-r-lg text-right">PA ALL</th>
+            </tr>
+          </thead>
+          <tbody class="text-xs text-brand-dark divide-y divide-gray-100 font-semibold" id="table-all-body">
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-4 text-brand-muted font-bold">W1</td><td class="py-2.5 px-4 text-right text-brand-primary font-bold text-sm" id="all-w1-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-4 text-brand-muted font-bold">W2</td><td class="py-2.5 px-4 text-right text-brand-primary font-bold text-sm" id="all-w2-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-4 text-brand-muted font-bold">W3</td><td class="py-2.5 px-4 text-right text-brand-primary font-bold text-sm" id="all-w3-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-4 text-brand-muted font-bold">W4</td><td class="py-2.5 px-4 text-right text-brand-primary font-bold text-sm" id="all-w4-pa">-</td></tr>
+            <tr class="bg-brand-primary/5 font-bold border-t border-brand-primary/10"><td class="py-2.5 px-4 text-brand-primary font-black text-sm">MTD</td><td class="py-2.5 px-4 text-right text-brand-primary font-black text-base" id="all-mtd-pa">-</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: Physical Availability Trend Chart -->
+  <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm mb-6">
+    <h3 class="text-lg font-bold text-brand-primary mb-4">Physical Availability Trend</h3>
+    <div class="h-64 w-full">
+      <canvas id="paTrendChart"></canvas>
+    </div>
+  </div>
+</div>

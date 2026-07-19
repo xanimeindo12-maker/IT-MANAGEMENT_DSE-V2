@@ -1,0 +1,196 @@
+<div class="space-y-6 w-full pb-10">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-100 pb-4 gap-4">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary">Jadwal Preventive Maintenance</h2>
+      <p class="text-brand-muted text-sm font-medium">Rencana PM 1 Tahun — 20 Unit per Bulan (PC & Laptop)</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Month Filter Dropdown -->
+      <div class="relative">
+        <i class="fa-solid fa-calendar-days absolute left-3 top-1/2 -translate-y-1/2 text-brand-primary text-sm"></i>
+        <select id="maintenance-month-filter" onchange="renderMaintenanceTable()"
+          class="pl-10 pr-8 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm font-semibold text-brand-primary bg-white min-w-[240px] appearance-none cursor-pointer">
+          <!-- Options will be populated by JS -->
+        </select>
+        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+      </div>
+      
+      <!-- Tombol Tambah Jadwal -->
+      <button onclick="openMaintenanceModal()" class="bg-brand-primary hover:bg-blue-800 text-white font-bold py-2.5 px-4 rounded-xl shadow-md text-xs flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-plus"></i> Tambah Jadwal
+      </button>
+
+      <!-- Summary Badge -->
+      <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50 border border-blue-100">
+        <i class="fa-solid fa-microchip text-brand-primary text-sm"></i>
+        <span id="maintenance-total-units" class="text-xs font-black text-brand-primary">0 Unit</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Cards Row -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Card: Total Perangkat Terjadwal -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+          <i class="fa-solid fa-desktop text-brand-primary text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Perangkat</span>
+      </div>
+      <p id="mp-total-scheduled" class="text-2xl font-black text-brand-primary">0</p>
+    </div>
+    <!-- Card: Target Bulan Ini -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+          <i class="fa-solid fa-bullseye text-brand-accent text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Target Bulan</span>
+      </div>
+      <p id="mp-active-month" class="text-lg font-black text-brand-accent truncate">-</p>
+    </div>
+    <!-- Card: Selesai -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
+          <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Selesai (Done)</span>
+      </div>
+      <p id="mp-done-count" class="text-2xl font-black text-emerald-500">0</p>
+    </div>
+    <!-- Card: Belum Dikerjakan -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center">
+          <i class="fa-solid fa-clock text-orange-500 text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Pending</span>
+      </div>
+      <p id="mp-pending-count" class="text-2xl font-black text-orange-500">0</p>
+    </div>
+  </div>
+
+  <!-- Maintenance Schedule Table -->
+  <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-wrench text-brand-primary"></i>
+        <h3 class="font-bold text-brand-primary uppercase text-xs tracking-widest">Schedule Data Stream</h3>
+      </div>
+      <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+        <!-- Live Search Input for Maintenance Plan -->
+        <div class="relative w-full md:w-64">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+          <input type="text" id="maintenance-search" placeholder="Cari Perangkat / Host / User..."
+            class="pl-9 pr-4 py-2 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-xs w-full transition-all bg-white">
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
+          <span class="text-[10px] text-brand-accent font-black">MANUAL PM PLAN</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-gray-600 border-collapse">
+        <thead class="bg-gray-50/50 text-gray-700 border-b border-gray-100">
+          <tr>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider w-12 text-center whitespace-nowrap">No</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Target Date</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Target Reschedule</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Bulan / Periode</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Host Name</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Assigned To</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Status Maintenance</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Keterangan / Tanggal Aktual</th>
+            <th class="px-4 py-3 font-bold text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="maintenance-table-body" class="divide-y divide-gray-50">
+          <tr>
+            <td colspan="9" class="px-6 py-12 text-center text-gray-400">
+              <i class="fa-solid fa-spinner animate-spin text-3xl mb-4"></i>
+              <p>Memuat jadwal maintenance...</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Pop-up: Atur Jadwal Maintenance -->
+<div id="maintenance-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl border border-gray-100 shadow-2xl w-full max-w-lg overflow-hidden animate__animated animate__zoomIn animate__faster">
+    <!-- Modal Header -->
+    <div class="px-6 py-5 bg-[#004684] text-white flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-calendar-plus text-[#FDB813]"></i>
+        <h3 class="font-bold text-sm tracking-wider uppercase">Atur Jadwal PM</h3>
+      </div>
+      <button onclick="closeMaintenanceModal()" class="text-white/80 hover:text-white transition-colors">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+    
+    <!-- Modal Body (Form) -->
+    <form id="maintenance-form" onsubmit="saveMaintSchedule(event)" class="p-6 space-y-4">
+      <!-- Hidden Input for Serial -->
+      <input type="hidden" id="maint-sn">
+      
+      <!-- Pilih Perangkat -->
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Perangkat (Host Name - Serial Number)</label>
+        <select id="maint-asset-select" onchange="onMaintDeviceSelectChange()" required
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm font-semibold text-gray-700 bg-white">
+          <!-- Options will be populated dynamically from eligible assets -->
+        </select>
+      </div>
+
+      <!-- Target Date -->
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Target Date (Tanggal Rencana PM)</label>
+        <input type="date" id="maint-target-date" required
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FDB813] focus:border-transparent outline-none text-sm font-semibold text-gray-700">
+      </div>
+
+      <!-- Target Reschedule (Opsional) -->
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Target Reschedule (Opsional)</label>
+        <input type="date" id="maint-target-reschedule"
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FDB813] focus:border-transparent outline-none text-sm font-semibold text-gray-700">
+      </div>
+
+      <!-- Bulan / Periode -->
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Bulan / Periode</label>
+        <select id="maint-periode" required
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FDB813] focus:border-transparent outline-none text-sm font-semibold text-gray-700">
+          <option value="Mei 2026">Mei 2026</option>
+          <option value="Juni 2026">Juni 2026</option>
+          <option value="Juli 2026">Juli 2026</option>
+          <option value="Agustus 2026">Agustus 2026</option>
+          <option value="September 2026">September 2026</option>
+          <option value="Oktober 2026">Oktober 2026</option>
+          <option value="November 2026">November 2026</option>
+          <option value="Desember 2026">Desember 2026</option>
+        </select>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+        <button type="button" onclick="closeMaintenanceModal()"
+          class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-xs font-bold text-gray-500 uppercase tracking-wider transition-colors">
+          Batal
+        </button>
+        <button type="submit"
+          class="px-5 py-2.5 rounded-xl bg-[#004684] hover:bg-blue-800 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md">
+          Simpan Rencana Jadwal
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

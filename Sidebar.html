@@ -1,0 +1,291 @@
+<!-- Sidebar -->
+<aside id="app-sidebar" class="sidebar-expanded bg-brand-primary hidden md:flex flex-col shadow-2xl z-10 flex-shrink-0 relative transition-all duration-300 ease-in-out">
+
+  <!-- Logo & Branding Header -->
+  <div class="px-5 py-5 flex items-center gap-3 border-b border-blue-700/50">
+    <div class="sidebar-logo-icon bg-brand-accent p-2.5 rounded-xl text-brand-primary shadow-lg shadow-amber-500/20 flex-shrink-0">
+      <i class="fa-solid fa-server text-xl"></i>
+    </div>
+    <div class="sidebar-label">
+      <h1 class="text-lg font-bold text-white tracking-tight leading-tight">IT Admin Hub</h1>
+      <p class="text-[11px] text-blue-200/70 font-medium">BTSJ Operations</p>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="flex-1 px-3 py-3 space-y-1 overflow-y-auto sidebar-nav-scroll">
+
+    <!-- ═══ GROUP 1: MAIN DASHBOARD ═══ -->
+    <div class="sidebar-label">
+      <p class="sidebar-category-header">MAIN DASHBOARD</p>
+    </div>
+
+    <a href="#" id="menu-overview" onclick="switchPage('overview')"
+      class="sidebar-menu sidebar-menu-active">
+      <span class="sidebar-menu-icon-wrap">
+        <i class="fa-solid fa-chart-pie text-sm"></i>
+      </span>
+      <span class="sidebar-label sidebar-menu-text">Dashboard Overview</span>
+    </a>
+
+    <!-- Inventory & Assets — Dropdown Parent -->
+    <a href="#" id="menu-inventory" onclick="toggleDropdown('inventory-dropdown')"
+      class="sidebar-menu sidebar-menu-default">
+      <span class="sidebar-menu-icon-wrap">
+        <i class="fa-solid fa-boxes-stacked text-sm"></i>
+      </span>
+      <span class="sidebar-label sidebar-menu-text flex-1">Inventory & Assets</span>
+      <i class="fa-solid fa-chevron-down text-[10px] sidebar-label sidebar-dropdown-chevron transition-transform duration-300"
+        id="chevron-inventory-dropdown"></i>
+    </a>
+
+    <!-- Inventory Dropdown Sub-menu -->
+    <div id="inventory-dropdown" class="sidebar-dropdown-panel sidebar-label overflow-hidden transition-all duration-300 ease-in-out"
+      style="max-height: 0; opacity: 0;">
+      <div class="pl-9 pr-3 py-1 space-y-0.5">
+        <a href="#" onclick="navigateSubMenu('inventory', this)"
+          class="sidebar-submenu-item group flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-blue-200/60 hover:text-white hover:bg-white/5 transition-all duration-200">
+          <span class="submenu-dot w-1.5 h-1.5 rounded-full bg-blue-400/30 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
+          <span>Semua Aset</span>
+        </a>
+        <a href="#" onclick="navigateSubMenu('part-accessories-section', this)"
+          class="sidebar-submenu-item group flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-blue-200/60 hover:text-white hover:bg-white/5 transition-all duration-200">
+          <span class="submenu-dot w-1.5 h-1.5 rounded-full bg-blue-400/30 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
+          <span>Part Accessories</span>
+        </a>
+        <a href="#" onclick="navigateSubMenu('loan-section', this)"
+          class="sidebar-submenu-item group flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-blue-200/60 hover:text-white hover:bg-white/5 transition-all duration-200">
+          <span class="submenu-dot w-1.5 h-1.5 rounded-full bg-blue-400/30 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
+          <span>Peminjaman Aset</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div class="pt-2"></div>
+
+    <!-- ═══ GROUP 2: OPERATIONAL ACTIVITY ═══ -->
+    <div class="sidebar-label">
+      <p class="sidebar-category-header">OPERATIONAL ACTIVITY</p>
+    </div>
+
+    <a href="#" id="menu-logs" onclick="switchPage('logs-section')"
+      class="sidebar-menu sidebar-menu-default">
+      <span class="sidebar-menu-icon-wrap">
+        <i class="fa-solid fa-list-check text-sm"></i>
+      </span>
+      <span class="sidebar-label sidebar-menu-text">Daily Activity Logs</span>
+    </a>
+
+    <a href="#" id="menu-maintenance-schedule" onclick="switchPage('maintenance-schedule')"
+      class="sidebar-menu sidebar-menu-default">
+      <span class="sidebar-menu-icon-wrap">
+        <i class="fa-solid fa-calendar-days text-sm"></i>
+      </span>
+      <span class="sidebar-label sidebar-menu-text">Jadwal Maintenance</span>
+    </a>
+
+    <a href="#" id="menu-pa_analytics" onclick="switchPage('pa-section')"
+      class="sidebar-menu sidebar-menu-default">
+      <span class="sidebar-menu-icon-wrap">
+        <i class="fa-solid fa-chart-line text-sm"></i>
+      </span>
+      <span class="sidebar-label sidebar-menu-text">PA Performance</span>
+    </a>
+
+    <!-- Spacer -->
+    <div class="pt-2"></div>
+
+    <!-- ═══ GROUP 3: REPORT ═══ -->
+    <div class="sidebar-label">
+      <p class="sidebar-category-header">REPORT</p>
+    </div>
+
+    <a href="#" id="menu-evidence" onclick="switchPage('evidence-section')"
+      class="sidebar-menu sidebar-menu-default">
+      <span class="sidebar-menu-icon-wrap">
+        <i class="fa-solid fa-file-shield text-sm"></i>
+      </span>
+      <span class="sidebar-label sidebar-menu-text">Evidence Activity</span>
+    </a>
+
+    <!-- Spacer -->
+    <div class="pt-2"></div>
+
+    <!-- ═══ GROUP 4: SYSTEM UTILITIES ═══ -->
+    <div class="sidebar-label">
+      <p class="sidebar-category-header">SYSTEM UTILITIES</p>
+    </div>
+
+    <a href="#" id="menu-settings" onclick="switchPage('settings')"
+      class="sidebar-menu sidebar-menu-default">
+      <span class="sidebar-menu-icon-wrap">
+        <i class="fa-solid fa-gear text-sm"></i>
+      </span>
+      <span class="sidebar-label sidebar-menu-text">Settings</span>
+    </a>
+
+  </nav>
+
+  <!-- User Profile Widget -->
+  <div class="border-t border-blue-700/50 px-4 py-4 sidebar-label">
+    <div class="flex items-center gap-3 bg-blue-900/40 rounded-xl p-3 border border-blue-700/30 hover:border-blue-600/50 transition-colors">
+      <!-- Avatar with Online Pulse -->
+      <div class="relative flex-shrink-0">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-accent to-amber-600 flex items-center justify-center text-brand-primary font-black text-sm shadow-lg shadow-amber-500/20">
+          AD
+        </div>
+        <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-brand-primary shadow-lg shadow-emerald-500/40">
+          <span class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-50"></span>
+        </span>
+      </div>
+      <!-- User Info -->
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-bold text-white truncate leading-tight">Admin</p>
+        <p class="text-[10px] text-blue-200/60 font-semibold tracking-wider uppercase truncate">IT Administrator</p>
+      </div>
+      <!-- Options Dots -->
+      <button class="text-blue-300/40 hover:text-blue-100 transition-colors p-1">
+        <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Logout Button -->
+  <div class="border-t border-blue-700/50 px-3 py-3">
+    <a href="#" id="menu-logout" onclick="handleLogout()"
+      class="sidebar-menu hover:bg-rose-950/20 text-rose-300 hover:text-rose-100 border border-transparent hover:border-rose-900/30 font-bold transition-all duration-200">
+      <span class="sidebar-menu-icon-wrap text-rose-400 group-hover:text-rose-200">
+        <i class="fa-solid fa-right-from-bracket text-sm"></i>
+      </span>
+      <span class="sidebar-label sidebar-menu-text">Logout</span>
+    </a>
+  </div>
+
+  <!-- Collapse Button -->
+  <div class="border-t border-blue-700/50 px-4 py-3">
+    <button onclick="toggleSidebar()" id="sidebar-collapse-btn"
+      class="w-full flex items-center justify-center gap-2 bg-blue-900/50 hover:bg-blue-800/60 text-blue-300/60 hover:text-white rounded-lg py-2.5 transition-all duration-200 border border-blue-700/30 hover:border-blue-600/50">
+      <i class="fa-solid fa-chevron-left text-xs sidebar-collapse-icon transition-transform duration-300"></i>
+      <span class="text-[11px] font-semibold uppercase tracking-wider sidebar-label">Collapse</span>
+    </button>
+  </div>
+
+</aside>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  SIDEBAR DROPDOWN & SUB-MENU NAVIGATION LOGIC     -->
+<!-- ═══════════════════════════════════════════════════ -->
+<script>
+  /**
+   * toggleDropdown(dropdownId)
+   * Buka/tutup panel sub-menu dropdown dengan animasi max-height + opacity.
+   * Chevron icon akan berputar 180° saat panel terbuka.
+   */
+  function toggleDropdown(dropdownId) {
+    var dropdown = document.getElementById(dropdownId);
+    var chevron = document.getElementById('chevron-' + dropdownId);
+    if (!dropdown) return;
+
+    var isOpen = dropdown.classList.contains('dropdown-open');
+
+    if (isOpen) {
+      // === TUTUP DROPDOWN ===
+      dropdown.style.maxHeight = '0px';
+      dropdown.style.opacity = '0';
+      dropdown.classList.remove('dropdown-open');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+    } else {
+      // === BUKA DROPDOWN ===
+      dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+      dropdown.style.opacity = '1';
+      dropdown.classList.add('dropdown-open');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    }
+  }
+
+  /**
+   * navigateSubMenu(pageId, clickedElement)
+   * 1. Panggil switchPage() bawaan proyek untuk berpindah halaman.
+   * 2. Auto-buka dropdown parent jika sedang tertutup.
+   * 3. Beri penanda visual aktif (amber gold) pada sub-menu yang diklik.
+   * 4. Highlight parent menu-inventory sebagai aktif.
+   */
+  function navigateSubMenu(pageId, clickedElement) {
+    // 1. Pindah halaman via fungsi bawaan switchPage()
+    switchPage(pageId);
+
+    // 2. Pastikan dropdown terbuka setelah navigasi
+    var dropdown = document.getElementById('inventory-dropdown');
+    var chevron = document.getElementById('chevron-inventory-dropdown');
+    if (dropdown && !dropdown.classList.contains('dropdown-open')) {
+      dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+      dropdown.style.opacity = '1';
+      dropdown.classList.add('dropdown-open');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    }
+
+    // 3. Reset semua sub-menu item ke state default
+    var allSubItems = document.querySelectorAll('.sidebar-submenu-item');
+    allSubItems.forEach(function(item) {
+      item.classList.remove('submenu-active');
+    });
+
+    // 4. Beri status aktif pada sub-menu yang diklik
+    if (clickedElement) {
+      clickedElement.classList.add('submenu-active');
+    }
+
+    // 5. Re-highlight parent menu-inventory (switchPage sudah handle ini via
+    //    querySelector string matching, tapi kita pastikan ulang)
+    var parentMenu = document.getElementById('menu-inventory');
+    if (parentMenu) {
+      parentMenu.classList.remove('sidebar-menu-default');
+      parentMenu.classList.add('sidebar-menu-active');
+    }
+  }
+
+  /**
+   * handleLogout()
+   * Mengeluarkan pengguna dari dashboard dengan konfirmasi dialog SweetAlert2 premium.
+   */
+  function handleLogout() {
+    Swal.fire({
+      title: 'Logout dari Dashboard?',
+      text: "Anda akan keluar dari sesi IT Admin Hub saat ini.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e11d48', // rose-600 (exit red tint)
+      cancelButtonColor: '#004684', // brand-primary
+      confirmButtonText: 'Ya, Logout',
+      cancelButtonText: 'Batal',
+      background: '#ffffff',
+      customClass: {
+        popup: 'rounded-2xl border border-gray-100 shadow-xl',
+        title: 'text-brand-primary font-bold text-xl',
+        htmlContainer: 'text-gray-500 text-sm font-medium',
+        confirmButton: 'rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider',
+        cancelButton: 'rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Berhasil Logout',
+          text: 'Kembali ke halaman login...',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+          background: '#ffffff',
+          customClass: {
+            popup: 'rounded-2xl border border-gray-100 shadow-xl'
+          }
+        }).then(() => {
+          // Panggil backend Google Apps Script untuk mereload halaman web app dengan aman
+          google.script.run.withSuccessHandler(function(url) {
+            window.top.location.href = url;
+          }).getWebAppUrl();
+        });
+      }
+    });
+  }
+</script>

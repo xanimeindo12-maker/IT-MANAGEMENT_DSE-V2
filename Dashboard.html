@@ -1,0 +1,138 @@
+<div id="dashboard-content" class="hidden space-y-6 max-w-7xl mx-auto">
+
+  <!-- Welcome Message & Summary Card with Livin Gradient Border -->
+  <div class="border-gradient-livin p-6 shadow-md mb-6">
+    <h3 class="text-2xl font-bold text-brand-primary">Welcome back, Admin</h3>
+    <p class="text-brand-muted text-sm mt-1 font-medium">Here is the latest status of your IT Assets and Daily
+      Operations.</p>
+  </div>
+
+  <!-- KPI Cards Grid - Row 1 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+
+    <!-- Card 1: Total Assets -->
+    <div
+      class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <i class="fa-solid fa-server text-6xl text-brand-primary"></i>
+      </div>
+      <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Total IT Assets</p>
+      <div class="flex items-end gap-3">
+        <h4 id="kpi-total-assets" class="text-4xl font-black text-brand-primary">0</h4>
+        <span
+          class="text-xs text-brand-primary font-bold mb-1 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">Overall</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Assets In Use -->
+    <div
+      class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <i class="fa-solid fa-desktop text-6xl text-brand-primary"></i>
+      </div>
+      <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Assets In Use</p>
+      <div class="flex items-end gap-3">
+        <h4 id="kpi-active-assets" class="text-4xl font-black text-brand-primary">0</h4>
+        <span class="text-xs text-white font-bold mb-1 bg-brand-primary px-2 py-0.5 rounded">Active</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Assets In Stok -->
+    <div
+      class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+        <i class="fa-solid fa-boxes-stacked text-6xl text-brand-accent"></i>
+      </div>
+      <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Assets In Stok</p>
+      <div class="flex items-end gap-3">
+        <h4 id="kpi-instok-assets" class="text-4xl font-black text-brand-accent">0</h4>
+        <span
+          class="text-xs text-yellow-800 font-bold mb-1 bg-yellow-100 px-2 py-0.5 rounded border border-yellow-200">Available</span>
+      </div>
+    </div>
+
+    <!-- Card 4: Total Breakdown -->
+    <div
+      class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <i class="fa-solid fa-screwdriver-wrench text-6xl text-[#B91C1C]"></i>
+      </div>
+      <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Total Breakdown</p>
+      <div class="flex items-end gap-3">
+        <h4 id="kpi-breakdown-assets" class="text-4xl font-black text-[#B91C1C]">0</h4>
+        <span
+          class="text-xs text-[#B91C1C] font-bold mb-1 bg-[#FEF2F2] px-2 py-0.5 rounded border border-[#B91C1C]/20">Urgent</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- KPI Cards Grid - Row 2 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <!-- Card 4: Expiring Warranty -->
+    <div
+      class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <i class="fa-solid fa-triangle-exclamation text-6xl text-red-500"></i>
+      </div>
+      <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Expiring Warranty</p>
+      <div class="flex items-end gap-3">
+        <h4 id="kpi-expiring-assets" class="text-4xl font-black text-red-500">0</h4>
+        <span class="text-xs text-red-600 font-bold mb-1 bg-red-50 px-2 py-0.5 rounded border border-red-100">Action
+          Req.</span>
+      </div>
+    </div>
+
+    <!-- Card 5: Average PA -->
+    <div
+      class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+        <i class="fa-solid fa-percent text-6xl text-brand-accent"></i>
+      </div>
+      <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Avg Weekly PA</p>
+      <div class="flex items-end gap-3">
+        <h4 id="kpi-avg-pa" class="text-4xl font-black text-brand-primary">0%</h4>
+        <span
+          class="text-xs text-brand-muted font-bold mb-1 bg-gray-100 px-2 py-0.5 rounded border border-gray-200">Overall</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts & Tables Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Chart Section -->
+    <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+      <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+        <h3 class="text-lg font-bold text-brand-primary">Physical Availability (PA) Trend</h3>
+        <button
+          class="text-brand-muted hover:text-brand-primary transition bg-gray-50 px-3 py-1 rounded border border-gray-200 font-medium text-sm shadow-sm">
+          <i class="fa-solid fa-download mr-1"></i> Export
+        </button>
+      </div>
+      <div class="relative h-72 w-full">
+        <canvas id="paTrendChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Schedule Table Section -->
+    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col">
+      <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+        <h3 class="text-lg font-bold text-brand-primary">Upcoming Maintenance</h3>
+        <span
+          class="text-xs bg-yellow-50 border border-brand-accent text-yellow-800 px-2 py-1 rounded font-bold shadow-sm">Next
+          5</span>
+      </div>
+
+      <div class="flex-1 overflow-y-auto pr-2" id="maintenance-list">
+        <!-- JS akan merender list kesini -->
+      </div>
+
+      <button
+        class="mt-4 w-full py-2.5 rounded-xl bg-brand-primary text-white font-bold hover:bg-blue-900 transition-colors shadow-md shadow-blue-900/20">
+        View Full Schedule
+      </button>
+    </div>
+
+  </div>
+</div>

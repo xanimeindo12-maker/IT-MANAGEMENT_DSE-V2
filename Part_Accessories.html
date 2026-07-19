@@ -1,0 +1,181 @@
+<div id="part-accessories-content" class="space-y-6 w-full pb-10">
+  
+  <!-- Header Title -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 border-b border-gray-100 pb-5">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary tracking-tight">Part & Accessories</h2>
+      <p class="text-xs text-brand-muted mt-1">Manajemen Inventaris Aksesori Komputer & Komponen Pendukung IT</p>
+    </div>
+    
+    <!-- Action Button & Stats -->
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Total Stock Widget -->
+      <div class="bg-white border border-gray-100 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+        <div class="p-2 rounded-lg bg-blue-50 text-brand-primary">
+          <i class="fa-solid fa-boxes-stacked text-base"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Total Jenis</p>
+          <p id="acc-stats-count" class="text-lg font-extrabold text-brand-primary leading-none">0</p>
+        </div>
+      </div>
+
+      <button onclick="openAccessoryModal()" 
+        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-brand-primary to-blue-800 text-white hover:from-brand-primary hover:to-blue-900 transition-all duration-300 text-sm font-bold shadow-lg shadow-blue-500/10">
+        <i class="fa-solid fa-plus text-xs"></i>
+        Tambah Aksesori
+      </button>
+    </div>
+  </div>
+
+  <!-- Search & Filters Container -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col md:flex-row md:items-center gap-4">
+    <!-- Live Search -->
+    <div class="relative flex-1">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+      <input type="text" id="acc-search-input" placeholder="Cari berdasarkan nama aksesori atau Serial Number..."
+        class="w-full pl-11 pr-4 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all placeholder:text-gray-400">
+    </div>
+    
+    <!-- Category Filter Dropdown -->
+    <div class="w-full md:w-56">
+      <select id="acc-category-filter"
+        class="w-full px-3 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all text-gray-600 bg-white">
+        <option value="ALL">Semua Kategori</option>
+        <option value="Monitor">Monitor</option>
+        <option value="Keyboard">Keyboard</option>
+        <option value="Mouse">Mouse</option>
+        <option value="Adapter">Adapter & Charger</option>
+        <option value="Storage">External Storage / SSD</option>
+        <option value="Cable">Cable / Connector</option>
+        <option value="Other">Lainnya</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Accessories Table Wrapper -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-blue-500/5 border-b border-gray-100">
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center w-16">No</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Nama Aksesori</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Serial Number</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Kategori</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center">Stok</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Assigned To</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center">Status</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Keterangan</th>
+          </tr>
+        </thead>
+        <tbody id="accessories-table-body" class="divide-y divide-gray-50">
+          <tr>
+            <td colspan="8" class="px-6 py-12 text-center text-gray-400">
+              <i class="fa-solid fa-spinner animate-spin mr-2"></i> Memuat Data Aksesori...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Accessory Addition Modal -->
+  <div id="accessory-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-gray-100 transform transition-transform duration-300 scale-100">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-brand-primary text-white flex justify-between items-center">
+        <div>
+          <h3 class="text-base font-extrabold tracking-tight">Tambah Aksesori Baru</h3>
+          <p class="text-[10px] text-blue-200 font-semibold tracking-wider uppercase mt-0.5">IT Accessories Inventory</p>
+        </div>
+        <button onclick="closeAccessoryModal()" class="text-white/80 hover:text-white transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body Form -->
+      <form id="accessory-form" onsubmit="handleAccessorySubmit(event)" class="p-6 space-y-4">
+        <!-- Field: Name -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nama Aksesori <span class="text-rose-500">*</span></label>
+          <input type="text" id="acc-name" required placeholder="Contoh: Mouse Logitech G102, Monitor Dell 24 Inch"
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+        </div>
+
+        <!-- Two Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Field: SN -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Serial Number</label>
+            <input type="text" id="acc-sn" placeholder="Contoh: SN-123456 (Opsional)"
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+          </div>
+          <!-- Field: Category -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Kategori <span class="text-rose-500">*</span></label>
+            <select id="acc-category" required
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all bg-white text-gray-600">
+              <option value="Monitor">Monitor</option>
+              <option value="Keyboard">Keyboard</option>
+              <option value="Mouse">Mouse</option>
+              <option value="Adapter">Adapter & Charger</option>
+              <option value="Storage">External Storage / SSD</option>
+              <option value="Cable">Cable / Connector</option>
+              <option value="Other">Lainnya</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Two Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Field: Stock -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Total Stok <span class="text-rose-500">*</span></label>
+            <input type="number" id="acc-stock" required min="1" value="1"
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+          </div>
+          <!-- Field: Status -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Status IT</label>
+            <select id="acc-status" required
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all bg-white text-gray-600">
+              <option value="Available">Available (In Stock)</option>
+              <option value="In Use">In Use (Aktif)</option>
+              <option value="Low Stock">Low Stock (Limit)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Field: Assigned To -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Assigned To (PIC)</label>
+          <input type="text" id="acc-assigned" placeholder="Contoh: Muhammad Taufik, Guest, atau - (Default)"
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+        </div>
+
+        <!-- Field: Notes -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Notes / Catatan</label>
+          <textarea id="acc-notes" rows="2" placeholder="Detail tambahan atau keterangan rak penyimpanan..."
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all resize-none"></textarea>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <button type="button" onclick="closeAccessoryModal()"
+            class="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl transition-all">
+            Batal
+          </button>
+          <button type="submit"
+            class="px-5 py-2 text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-blue-800 rounded-xl shadow-md transition-all">
+            Simpan Aksesori
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</div>
