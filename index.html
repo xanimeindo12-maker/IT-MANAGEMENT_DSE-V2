@@ -1,0 +1,1595 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT Asset Management Dashboard</title>
+
+  <!-- Tailwind CSS & Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#004684', // Deep Blue
+              accent: '#FDB813',  // Bright Yellow
+              bg: '#F9FAFB',      // Light gray for subtle contrast, or white
+              surface: '#FFFFFF', // White cards
+              text: '#1F2937',    // slate-800 for main text
+              muted: '#6B7280',   // slate-500 for secondary text
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Tautan ke file CSS eksternal -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- SweetAlert2 for modern notifications -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body
+  class="bg-brand-bg text-brand-text antialiased h-screen flex overflow-hidden selection:bg-brand-primary selection:text-white">
+
+  <!-- Sidebar Component -->
+  <!-- Sidebar -->
+  <aside id="app-sidebar"
+    class="sidebar-expanded bg-brand-primary hidden md:flex flex-col shadow-2xl z-10 flex-shrink-0 relative transition-all duration-300 ease-in-out">
+
+    <!-- Logo & Branding Header -->
+    <div class="px-5 py-5 flex items-center gap-3 border-b border-blue-700/50">
+      <div
+        class="sidebar-logo-icon bg-brand-accent p-2.5 rounded-xl text-brand-primary shadow-lg shadow-amber-500/20 flex-shrink-0">
+        <i class="fa-solid fa-server text-xl"></i>
+      </div>
+      <div class="sidebar-label">
+        <h1 class="text-lg font-bold text-white tracking-tight leading-tight">IT Admin Hub</h1>
+        <p class="text-[11px] text-blue-200/70 font-medium">BTSJ Operations</p>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="flex-1 px-3 py-3 space-y-1 overflow-y-auto sidebar-nav-scroll">
+
+      <!-- â•â•â• GROUP 1: MAIN DASHBOARD â•â•â• -->
+      <div class="sidebar-label">
+        <p class="sidebar-category-header">MAIN DASHBOARD</p>
+      </div>
+
+      <a href="#" id="menu-overview" onclick="switchPage('overview')" class="sidebar-menu sidebar-menu-active">
+        <span class="sidebar-menu-icon-wrap">
+          <i class="fa-solid fa-chart-pie text-sm"></i>
+        </span>
+        <span class="sidebar-label sidebar-menu-text">Dashboard Overview</span>
+      </a>
+
+      <!-- Inventory & Assets â€” Dropdown Parent -->
+      <a href="#" id="menu-inventory" onclick="toggleDropdown('inventory-dropdown')"
+        class="sidebar-menu sidebar-menu-default">
+        <span class="sidebar-menu-icon-wrap">
+          <i class="fa-solid fa-boxes-stacked text-sm"></i>
+        </span>
+        <span class="sidebar-label sidebar-menu-text flex-1">Inventory & Assets</span>
+        <i class="fa-solid fa-chevron-down text-[10px] sidebar-label sidebar-dropdown-chevron transition-transform duration-300"
+          id="chevron-inventory-dropdown"></i>
+      </a>
+
+      <!-- Inventory Dropdown Sub-menu -->
+      <div id="inventory-dropdown"
+        class="sidebar-dropdown-panel sidebar-label overflow-hidden transition-all duration-300 ease-in-out"
+        style="max-height: 0; opacity: 0;">
+        <div class="pl-9 pr-3 py-1 space-y-0.5">
+          <a href="#" onclick="navigateSubMenu('inventory', this)"
+            class="sidebar-submenu-item group flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-blue-200/60 hover:text-white hover:bg-white/5 transition-all duration-200">
+            <span
+              class="submenu-dot w-1.5 h-1.5 rounded-full bg-blue-400/30 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
+            <span>Semua Aset</span>
+          </a>
+          <a href="#" onclick="navigateSubMenu('part-accessories-section', this)"
+            class="sidebar-submenu-item group flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-blue-200/60 hover:text-white hover:bg-white/5 transition-all duration-200">
+            <span
+              class="submenu-dot w-1.5 h-1.5 rounded-full bg-blue-400/30 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
+            <span>Part Accessories</span>
+          </a>
+          <a href="#" onclick="navigateSubMenu('loan-section', this)"
+            class="sidebar-submenu-item group flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-blue-200/60 hover:text-white hover:bg-white/5 transition-all duration-200">
+            <span
+              class="submenu-dot w-1.5 h-1.5 rounded-full bg-blue-400/30 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
+            <span>Peminjaman Aset</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Spacer -->
+      <div class="pt-2"></div>
+
+      <!-- â•â•â• GROUP 2: OPERATIONAL ACTIVITY â•â•â• -->
+      <div class="sidebar-label">
+        <p class="sidebar-category-header">OPERATIONAL ACTIVITY</p>
+      </div>
+
+      <a href="#" id="menu-logs" onclick="switchPage('logs-section')" class="sidebar-menu sidebar-menu-default">
+        <span class="sidebar-menu-icon-wrap">
+          <i class="fa-solid fa-list-check text-sm"></i>
+        </span>
+        <span class="sidebar-label sidebar-menu-text">Daily Activity Logs</span>
+      </a>
+
+      <a href="#" id="menu-maintenance-schedule" onclick="switchPage('maintenance-schedule')"
+        class="sidebar-menu sidebar-menu-default">
+        <span class="sidebar-menu-icon-wrap">
+          <i class="fa-solid fa-calendar-days text-sm"></i>
+        </span>
+        <span class="sidebar-label sidebar-menu-text">Jadwal Maintenance</span>
+      </a>
+
+      <a href="#" id="menu-pa_analytics" onclick="switchPage('pa-section')" class="sidebar-menu sidebar-menu-default">
+        <span class="sidebar-menu-icon-wrap">
+          <i class="fa-solid fa-chart-line text-sm"></i>
+        </span>
+        <span class="sidebar-label sidebar-menu-text">PA Performance</span>
+      </a>
+
+      <!-- Spacer -->
+      <div class="pt-2"></div>
+
+      <!-- â•â•â• GROUP 3: REPORT â•â•â• -->
+      <div class="sidebar-label">
+        <p class="sidebar-category-header">REPORT</p>
+      </div>
+
+      <a href="#" id="menu-evidence" onclick="switchPage('evidence-section')" class="sidebar-menu sidebar-menu-default">
+        <span class="sidebar-menu-icon-wrap">
+          <i class="fa-solid fa-file-shield text-sm"></i>
+        </span>
+        <span class="sidebar-label sidebar-menu-text">Evidence Activity</span>
+      </a>
+
+      <!-- Spacer -->
+      <div class="pt-2"></div>
+
+      <!-- â•â•â• GROUP 4: SYSTEM UTILITIES â•â•â• -->
+      <div class="sidebar-label">
+        <p class="sidebar-category-header">SYSTEM UTILITIES</p>
+      </div>
+
+      <a href="#" id="menu-settings" onclick="switchPage('settings')" class="sidebar-menu sidebar-menu-default">
+        <span class="sidebar-menu-icon-wrap">
+          <i class="fa-solid fa-gear text-sm"></i>
+        </span>
+        <span class="sidebar-label sidebar-menu-text">Settings</span>
+      </a>
+
+    </nav>
+
+    <!-- User Profile Widget -->
+    <div class="border-t border-blue-700/50 px-4 py-4 sidebar-label">
+      <div
+        class="flex items-center gap-3 bg-blue-900/40 rounded-xl p-3 border border-blue-700/30 hover:border-blue-600/50 transition-colors">
+        <!-- Avatar with Online Pulse -->
+        <div class="relative flex-shrink-0">
+          <div
+            class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-accent to-amber-600 flex items-center justify-center text-brand-primary font-black text-sm shadow-lg shadow-amber-500/20">
+            AD
+          </div>
+          <span
+            class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-brand-primary shadow-lg shadow-emerald-500/40">
+            <span class="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-50"></span>
+          </span>
+        </div>
+        <!-- User Info -->
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-bold text-white truncate leading-tight">Admin</p>
+          <p class="text-[10px] text-blue-200/60 font-semibold tracking-wider uppercase truncate">IT Administrator</p>
+        </div>
+        <!-- Options Dots -->
+        <button class="text-blue-300/40 hover:text-blue-100 transition-colors p-1">
+          <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="border-t border-blue-700/50 px-3 py-3">
+      <a href="#" id="menu-logout" onclick="handleLogout()"
+        class="sidebar-menu hover:bg-rose-950/20 text-rose-300 hover:text-rose-100 border border-transparent hover:border-rose-900/30 font-bold transition-all duration-200">
+        <span class="sidebar-menu-icon-wrap text-rose-400 group-hover:text-rose-200">
+          <i class="fa-solid fa-right-from-bracket text-sm"></i>
+        </span>
+        <span class="sidebar-label sidebar-menu-text">Logout</span>
+      </a>
+    </div>
+
+    <!-- Collapse Button -->
+    <div class="border-t border-blue-700/50 px-4 py-3">
+      <button onclick="toggleSidebar()" id="sidebar-collapse-btn"
+        class="w-full flex items-center justify-center gap-2 bg-blue-900/50 hover:bg-blue-800/60 text-blue-300/60 hover:text-white rounded-lg py-2.5 transition-all duration-200 border border-blue-700/30 hover:border-blue-600/50">
+        <i class="fa-solid fa-chevron-left text-xs sidebar-collapse-icon transition-transform duration-300"></i>
+        <span class="text-[11px] font-semibold uppercase tracking-wider sidebar-label">Collapse</span>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-brand-bg">
+
+    <!-- Top Header (Mobile Toggle & Title) -->
+    <header
+      class="bg-white/80 backdrop-blur-md p-4 md:px-8 border-b border-gray-200 flex justify-between items-center z-10 sticky top-0 shadow-sm">
+      <div class="flex items-center gap-4">
+        <button class="md:hidden text-brand-muted hover:text-brand-primary transition">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+        <h2 class="text-xl font-bold text-brand-primary tracking-tight">Dashboard Overview</h2>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Status Indicator -->
+        <div
+          class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-brand-primary border border-blue-100 text-sm font-semibold shadow-sm">
+          <div class="w-2 h-2 rounded-full bg-brand-accent animate-pulse shadow-[0_0_8px_#FDB813]"></div>
+          System Online
+        </div>
+      </div>
+    </header>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto p-4 md:px-4 md:py-8">
+
+      <!-- Loading State -->
+      <div id="loading-state" class="flex flex-col items-center justify-center h-64 gap-4">
+        <div class="loader"></div>
+        <p class="text-brand-primary font-medium text-sm animate-pulse">Synchronizing with Database...</p>
+      </div>
+
+      <!-- Modules -->
+      <div id="dashboard-content" class="hidden space-y-6 max-w-7xl mx-auto">
+
+        <!-- Welcome Message & Summary Card with Livin Gradient Border -->
+        <div class="border-gradient-livin p-6 shadow-md mb-6">
+          <h3 class="text-2xl font-bold text-brand-primary">Welcome back, Admin</h3>
+          <p class="text-brand-muted text-sm mt-1 font-medium">Here is the latest status of your IT Assets and Daily
+            Operations.</p>
+        </div>
+
+        <!-- KPI Cards Grid - Row 1 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+
+          <!-- Card 1: Total Assets -->
+          <div
+            class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <i class="fa-solid fa-server text-6xl text-brand-primary"></i>
+            </div>
+            <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Total IT Assets</p>
+            <div class="flex items-end gap-3">
+              <h4 id="kpi-total-assets" class="text-4xl font-black text-brand-primary">0</h4>
+              <span
+                class="text-xs text-brand-primary font-bold mb-1 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">Overall</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Assets In Use -->
+          <div
+            class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <i class="fa-solid fa-desktop text-6xl text-brand-primary"></i>
+            </div>
+            <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Assets In Use</p>
+            <div class="flex items-end gap-3">
+              <h4 id="kpi-active-assets" class="text-4xl font-black text-brand-primary">0</h4>
+              <span class="text-xs text-white font-bold mb-1 bg-brand-primary px-2 py-0.5 rounded">Active</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Assets In Stok -->
+          <div
+            class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <i class="fa-solid fa-boxes-stacked text-6xl text-brand-accent"></i>
+            </div>
+            <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Assets In Stok</p>
+            <div class="flex items-end gap-3">
+              <h4 id="kpi-instok-assets" class="text-4xl font-black text-brand-accent">0</h4>
+              <span
+                class="text-xs text-yellow-800 font-bold mb-1 bg-yellow-100 px-2 py-0.5 rounded border border-yellow-200">Available</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Total Breakdown -->
+          <div
+            class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <i class="fa-solid fa-screwdriver-wrench text-6xl text-[#B91C1C]"></i>
+            </div>
+            <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Total Breakdown</p>
+            <div class="flex items-end gap-3">
+              <h4 id="kpi-breakdown-assets" class="text-4xl font-black text-[#B91C1C]">0</h4>
+              <span
+                class="text-xs text-[#B91C1C] font-bold mb-1 bg-[#FEF2F2] px-2 py-0.5 rounded border border-[#B91C1C]/20">Urgent</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- KPI Cards Grid - Row 2 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <!-- Card 4: Expiring Warranty -->
+          <div
+            class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <i class="fa-solid fa-triangle-exclamation text-6xl text-red-500"></i>
+            </div>
+            <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Expiring Warranty</p>
+            <div class="flex items-end gap-3">
+              <h4 id="kpi-expiring-assets" class="text-4xl font-black text-red-500">0</h4>
+              <span
+                class="text-xs text-red-600 font-bold mb-1 bg-red-50 px-2 py-0.5 rounded border border-red-100">Action
+                Req.</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Average PA -->
+          <div
+            class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <i class="fa-solid fa-percent text-6xl text-brand-accent"></i>
+            </div>
+            <p class="text-brand-muted text-sm font-semibold mb-1 uppercase tracking-wide">Avg Weekly PA</p>
+            <div class="flex items-end gap-3">
+              <h4 id="kpi-avg-pa" class="text-4xl font-black text-brand-primary">0%</h4>
+              <span
+                class="text-xs text-brand-muted font-bold mb-1 bg-gray-100 px-2 py-0.5 rounded border border-gray-200">Overall</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts & Tables Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <!-- Chart Section -->
+          <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+              <h3 class="text-lg font-bold text-brand-primary">Physical Availability (PA) Trend</h3>
+              <button
+                class="text-brand-muted hover:text-brand-primary transition bg-gray-50 px-3 py-1 rounded border border-gray-200 font-medium text-sm shadow-sm">
+                <i class="fa-solid fa-download mr-1"></i> Export
+              </button>
+            </div>
+            <div class="relative h-72 w-full">
+              <canvas id="paTrendChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Schedule Table Section -->
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+              <h3 class="text-lg font-bold text-brand-primary">Upcoming Maintenance</h3>
+              <span
+                class="text-xs bg-yellow-50 border border-brand-accent text-yellow-800 px-2 py-1 rounded font-bold shadow-sm">Next
+                5</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto pr-2" id="maintenance-list">
+              <!-- JS akan merender list kesini -->
+            </div>
+
+            <button
+              class="mt-4 w-full py-2.5 rounded-xl bg-brand-primary text-white font-bold hover:bg-blue-900 transition-colors shadow-md shadow-blue-900/20">
+              View Full Schedule
+            </button>
+          </div>
+
+        </div>
+      </div>
+      <div id="inventory-content" class="hidden space-y-6 w-full">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-4">
+          <h2 class="text-2xl font-bold text-brand-primary">Inventory & Assets</h2>
+          <div class="relative">
+            <i
+              class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="inventory-search" placeholder="Search assets..."
+              class="pl-10 pr-4 py-2 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm w-64 transition-all">
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-600">
+              <thead class="bg-gray-50 text-xs uppercase text-gray-700 border-b border-gray-100">
+                <tr>
+                  <th class="px-4 py-4 font-bold w-12 text-center whitespace-nowrap">NO</th>
+                  <th class="px-6 py-4 font-bold">Host Name</th>
+                  <th class="px-6 py-4 font-bold">Serial Number</th>
+                  <th class="px-6 py-4 font-bold">Assigned To</th>
+                  <th class="px-6 py-4 font-bold">Department</th>
+                  <th class="px-6 py-4 font-bold">Model</th>
+                  <th class="px-6 py-4 font-bold">Status</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-table-body" class="divide-y divide-gray-100 bg-white">
+                <!-- JS akan merender list kesini -->
+                <tr>
+                  <td colspan="7" class="px-6 py-4 text-center text-gray-500">Loading inventory data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Pagination Controls -->
+          <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50">
+            <span id="pagination-info" class="text-sm text-gray-600 font-medium">Showing 0 to 0 of 0 entries</span>
+            <div class="flex gap-2 items-center">
+              <button id="prev-page-btn" onclick="prevPage()"
+                class="px-4 py-2 text-sm font-bold rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-accent hover:border-brand-accent hover:text-brand-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+
+              <div id="pagination-numbers" class="flex gap-1">
+                <!-- Numbers will be rendered here -->
+              </div>
+
+              <button id="next-page-btn" onclick="nextPage()"
+                class="px-4 py-2 text-sm font-bold rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-accent hover:border-brand-accent hover:text-brand-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="logs-section" class="hidden">
+        <div class="space-y-6 w-full pb-10">
+          <!-- Header with Add Button -->
+          <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+            <div>
+              <h2 class="text-2xl font-bold text-brand-primary">Daily Activity Logs</h2>
+              <p class="text-brand-muted text-sm font-medium">Digitalized Operational Activity Management</p>
+            </div>
+            <button onclick="openLogModal()"
+              class="bg-brand-primary hover:bg-blue-800 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2 group">
+              <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform"></i>
+              Add New Activity
+            </button>
+          </div>
+
+          <!-- Full-Width Data Stream -->
+          <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-list-ul text-brand-primary"></i>
+                <h3 class="font-bold text-brand-primary uppercase text-xs tracking-widest">Master Activity Stream</h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
+                <span class="text-[10px] text-green-700 font-black">REAL-TIME DATA FEED</span>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-gray-600">
+                <thead class="bg-gray-50/50 text-gray-700 border-b border-gray-100">
+                  <tr>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider w-16 text-center">NO</th>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider w-32">Date</th>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Asset Number</th>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Name / User</th>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Divisi</th>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Category</th>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider text-center">Time (Start-End)</th>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider text-center">Actual (Min)</th>
+                    <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Engineer</th>
+                  </tr>
+                </thead>
+                <tbody id="activity-logs-body" class="divide-y divide-gray-50">
+                  <!-- Populated by JS -->
+                  <tr>
+                    <td colspan="9" class="px-6 py-12 text-center text-gray-400">
+                      <i class="fa-solid fa-spinner animate-spin text-3xl mb-4"></i>
+                      <p>Fetching activity logs...</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Pagination Controls for Logs -->
+            <div id="log-pagination"
+              class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+              <span id="log-pagination-info" class="text-sm text-gray-600 font-medium">Showing 0 to 0 of 0
+                entries</span>
+              <div class="flex gap-2 items-center">
+                <button id="log-prev-btn" onclick="prevLogPage()"
+                  class="px-4 py-2 text-sm font-bold rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-accent hover:border-brand-accent hover:text-brand-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+
+                <div id="log-pagination-numbers" class="flex gap-1">
+                  <!-- Numbers will be rendered here -->
+                </div>
+
+                <button id="log-next-btn" onclick="nextLogPage()"
+                  class="px-4 py-2 text-sm font-bold rounded-lg border-2 border-brand-primary text-brand-primary hover:bg-brand-accent hover:border-brand-accent hover:text-brand-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODAL POPUP FORM -->
+          <div id="log-modal"
+            class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-brand-primary/40 backdrop-blur-sm transition-all duration-300">
+            <div
+              class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 modal-container">
+              <!-- Modal Header -->
+              <div class="bg-brand-primary p-6 text-white flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                  <div class="bg-white/20 p-2 rounded-xl">
+                    <i class="fa-solid fa-file-circle-plus text-xl text-brand-accent"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-bold">New Activity Log</h3>
+                    <p class="text-blue-200 text-xs font-medium">Record new maintenance or repair activity</p>
+                  </div>
+                </div>
+                <button onclick="closeLogModal()" class="text-white/60 hover:text-white transition-colors">
+                  <i class="fa-solid fa-circle-xmark text-2xl"></i>
+                </button>
+              </div>
+
+              <!-- Modal Body (Form) -->
+              <div class="p-8 max-h-[80vh] overflow-y-auto">
+                <form id="log-form" onsubmit="submitLog(event)" class="space-y-6">
+                  <!-- Row 1: Basic Info -->
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                      <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Activity
+                        Date</label>
+                      <input type="date" id="log-date" required
+                        class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Asset
+                        Number</label>
+                      <select id="log-device" required onchange="autoFillAsset(this.value)"
+                        class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm">
+                        <option value="">Select Asset...</option>
+                      </select>
+                    </div>
+                    <div class="md:col-span-2">
+                      <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Lead
+                        Engineer</label>
+                      <select id="log-engineer" required
+                        class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm">
+                        <option value="MUHAMMAD TAUFIK">MUHAMMAD TAUFIK</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Row 2: Asset Details (Auto-filled) -->
+                  <div
+                    class="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-blue-50/50 rounded-2xl border border-blue-100/50 shadow-inner">
+                    <div>
+                      <label class="block text-[10px] font-black text-blue-400 uppercase mb-1 tracking-tighter">User /
+                        Assignee</label>
+                      <input type="text" id="log-username" readonly
+                        class="w-full px-3 py-2 bg-transparent border-b border-blue-200 text-blue-900 font-bold outline-none text-sm transition-all duration-300">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-black text-blue-400 uppercase mb-1 tracking-tighter">Dept /
+                        Divisi</label>
+                      <input type="text" id="log-divisi" readonly
+                        class="w-full px-3 py-2 bg-transparent border-b border-blue-200 text-blue-900 font-bold outline-none text-sm transition-all duration-300">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-black text-blue-400 uppercase mb-1 tracking-tighter">Asset
+                        Location</label>
+                      <select id="log-lokasi" required
+                        class="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm transition-all duration-300">
+                        <option value="">Select Location...</option>
+                        <option value="MEETING">MEETING</option>
+                        <option value="MIO">MIO</option>
+                        <option value="IT">IT</option>
+                        <option value="OFFICE UTAMA">OFFICE UTAMA</option>
+                        <option value="TYER">TYER</option>
+                        <option value="PLANT">PLANT</option>
+                        <option value="MDVR">MDVR</option>
+                        <option value="SECURITY">SECURITY</option>
+                        <option value="SSE">SSE</option>
+                        <option value="OTD">OTD</option>
+                        <option value="SERTIFIKASI">SERTIFIKASI</option>
+                        <option value="PRODUKSI">PRODUKSI</option>
+                        <option value="SMART REFUELING">SMART REFUELING</option>
+                        <option value="OFFICE SM">OFFICE SM</option>
+                        <option value="WAREHOUSE SM">WAREHOUSE SM</option>
+                        <option value="MABES PSV">MABES PSV</option>
+                        <option value="MANDALIKA">MANDALIKA</option>
+                        <option value="MESS SKYVIEW">MESS SKYVIEW</option>
+                        <option value="KPCS">KPCS</option>
+                        <option value="MAINTANK">MAINTANK</option>
+                        <option value="KLINIK BTSJ">KLINIK BTSJ</option>
+                        <option value="TOOLROOM PLANT">TOOLROOM PLANT</option>
+                        <option value="SP">SP</option>
+                        <option value="BLASTING">BLASTING</option>
+                        <option value="ADM PLANT">ADM PLANT</option>
+                        <option value="R. GS BAWAH">R. GS BAWAH</option>
+                        <option value="PPD">PPD</option>
+                        <option value="PLANNER">PLANNER</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Row 3: Problems & Solutions -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div>
+                        <label
+                          class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Category</label>
+                        <select id="log-category" required
+                          class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm">
+                          <option value="Troubleshooting">Troubleshooting</option>
+                          <option value="Service">Service</option>
+                          <option value="-">-</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Initial
+                          Problem Report</label>
+                        <textarea id="log-problem" required rows="2" placeholder="..."
+                          class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm"></textarea>
+                      </div>
+                    </div>
+                    <div class="space-y-4">
+                      <div>
+                        <label
+                          class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Activity
+                          Detail</label>
+                        <textarea id="log-activity" required rows="2" placeholder="..."
+                          class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm"></textarea>
+                      </div>
+                      <div>
+                        <label
+                          class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Corrective
+                          Action / Solution</label>
+                        <textarea id="log-corrective" required rows="2" placeholder="..."
+                          class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary outline-none text-sm"></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Row 4: Time Control & Evidence Upload -->
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-100">
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">Start
+                          Time</label>
+                        <input type="time" id="log-start" required onchange="calculateDuration()"
+                          class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none">
+                      </div>
+                      <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-tighter">End
+                          Time</label>
+                        <input type="time" id="log-end" required onchange="calculateDuration()"
+                          class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none">
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="block text-[10px] font-black text-brand-primary uppercase mb-1 tracking-tighter font-bold">Total
+                        Duration (Minutes)</label>
+                      <div class="flex items-center gap-3">
+                        <input type="number" id="log-actual" readonly
+                          class="w-full px-3 py-2 bg-brand-primary/5 border border-brand-primary/20 rounded-xl font-black text-brand-primary text-xl outline-none text-center">
+                        <span class="text-xs font-bold text-gray-400 uppercase">Min</span>
+                      </div>
+                    </div>
+                    <div class="flex items-end">
+                      <!-- Placeholder for alignment -->
+                    </div>
+                  </div>
+
+                  <!-- Row 5: Evidence Photo Upload -->
+                  <div class="pt-4 border-t border-gray-100">
+                    <label class="block text-[10px] font-black text-gray-400 uppercase mb-2 tracking-tighter">
+                      <i class="fa-solid fa-camera-retro mr-1 text-brand-primary"></i> Evidence Photo (Optional)
+                    </label>
+                    <div class="flex flex-col md:flex-row items-start gap-4">
+                      <div class="flex-1 w-full">
+                        <label for="log-evidence"
+                          class="flex flex-col items-center justify-center w-full h-28 bg-gray-50 border-2 border-dashed border-gray-300 rounded-2xl cursor-pointer hover:bg-blue-50/50 hover:border-brand-primary/40 transition-all duration-200 group">
+                          <div class="flex flex-col items-center justify-center pt-3 pb-3">
+                            <i
+                              class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 group-hover:text-brand-primary transition-colors mb-1"></i>
+                            <p class="text-xs text-gray-500 group-hover:text-brand-primary transition-colors">
+                              <span class="font-bold">Klik untuk upload</span> atau drag & drop
+                            </p>
+                            <p class="text-[10px] text-gray-400">PNG, JPG, JPEG (Max 5MB)</p>
+                          </div>
+                          <input type="file" id="log-evidence" accept="image/png,image/jpeg,image/jpg" class="hidden"
+                            onchange="previewEvidence(this)" />
+                        </label>
+                      </div>
+                      <!-- Preview Thumbnail -->
+                      <div id="evidence-preview-wrap" class="hidden flex-shrink-0">
+                        <div class="relative group">
+                          <img id="evidence-preview" src="" alt="Preview"
+                            class="w-28 h-28 object-cover rounded-2xl border-2 border-brand-primary/20 shadow-md" />
+                          <button type="button" onclick="clearEvidence()"
+                            class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors opacity-0 group-hover:opacity-100">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                          </button>
+                          <p id="evidence-filename"
+                            class="text-[10px] text-gray-500 mt-1 text-center truncate max-w-[7rem]"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Row 6: Submit Button -->
+                  <div class="pt-4">
+                    <button type="submit"
+                      class="w-full bg-brand-primary hover:bg-blue-800 text-white font-bold py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all flex justify-center items-center gap-2">
+                      <i class="fa-solid fa-check-circle"></i> Save Activity Log
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pa-section" class="hidden">
+        <div class="space-y-6 w-full">
+  <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-4">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary">PA Performance Analytics</h2>
+      <p class="text-brand-muted text-sm font-medium">Dynamic Unit-Based MOHH Analytics</p>
+    </div>
+  </div>
+
+  <!-- Row 1: Four Weekly PA Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <!-- Card: W1 -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[140px] hover:shadow-md transition-all duration-200">
+      <div class="flex justify-between items-start">
+        <p class="text-brand-muted text-[11px] font-semibold uppercase tracking-wider">WEEKLY PA (W1)</p>
+        <span class="text-[9px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-wide">Week 1</span>
+      </div>
+      <div class="mt-4">
+        <h4 id="pa-w1-percent" class="text-3xl font-black text-brand-primary">100%</h4>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1">Status: <span id="pa-w1-status" class="font-bold text-emerald-500">Excellent</span></p>
+      </div>
+    </div>
+
+    <!-- Card: W2 -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[140px] hover:shadow-md transition-all duration-200">
+      <div class="flex justify-between items-start">
+        <p class="text-brand-muted text-[11px] font-semibold uppercase tracking-wider">WEEKLY PA (W2)</p>
+        <span class="text-[9px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-wide">Week 2</span>
+      </div>
+      <div class="mt-4">
+        <h4 id="pa-w2-percent" class="text-3xl font-black text-brand-primary">100%</h4>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1">Status: <span id="pa-w2-status" class="font-bold text-emerald-500">Excellent</span></p>
+      </div>
+    </div>
+
+    <!-- Card: W3 -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[140px] hover:shadow-md transition-all duration-200">
+      <div class="flex justify-between items-start">
+        <p class="text-brand-muted text-[11px] font-semibold uppercase tracking-wider">WEEKLY PA (W3)</p>
+        <span class="text-[9px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-wide">Week 3</span>
+      </div>
+      <div class="mt-4">
+        <h4 id="pa-w3-percent" class="text-3xl font-black text-brand-primary">100%</h4>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1">Status: <span id="pa-w3-status" class="font-bold text-emerald-500">Excellent</span></p>
+      </div>
+    </div>
+
+    <!-- Card: W4 -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[140px] hover:shadow-md transition-all duration-200">
+      <div class="flex justify-between items-start">
+        <p class="text-brand-muted text-[11px] font-semibold uppercase tracking-wider">WEEKLY PA (W4)</p>
+        <span class="text-[9px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-wide">Week 4</span>
+      </div>
+      <div class="mt-4">
+        <h4 id="pa-w4-percent" class="text-3xl font-black text-brand-primary">100%</h4>
+        <p class="text-[10px] text-gray-400 font-semibold mt-1">Status: <span id="pa-w4-status" class="font-bold text-emerald-500">Excellent</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Total PA All (MTD) - Full Width Premium banner card -->
+  <div class="bg-brand-primary rounded-2xl p-6 shadow-md relative overflow-hidden text-white group flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
+    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+      <i class="fa-solid fa-gauge-high text-9xl"></i>
+    </div>
+    <div class="space-y-1.5 z-10">
+      <p class="text-blue-200 text-[10px] font-bold uppercase tracking-widest">TOTAL PERFORMANCE ACCUMULATION</p>
+      <h3 class="text-2xl font-black text-white">TOTAL PA ALL (MTD)</h3>
+      <p class="text-xs text-blue-200/80 font-medium max-w-2xl">Rata-rata akumulasi ketersediaan fisik perangkat (Physical Availability) bulan ini berdasarkan histori aktivitas Troubleshooting dan Maintenance.</p>
+    </div>
+    <div class="flex items-center gap-6 z-10 self-end md:self-auto">
+      <div class="text-right">
+        <span class="text-[9px] text-blue-900 font-black uppercase tracking-wider bg-brand-accent px-2.5 py-1 rounded shadow-sm">Month-to-Date</span>
+        <div class="text-xs text-blue-200/80 font-semibold mt-2 space-y-1">
+          <div>â— Total Activity: <span id="pa-total-activities" class="font-bold text-brand-accent">0</span> Logs (Troubleshooting & PM)</div>
+          <div>â— Duration: <span id="pa-total-hours" class="font-bold text-brand-accent">0.0</span> Hrs (<span id="pa-total-minutes" class="font-bold text-brand-accent">0</span> Mins)</div>
+        </div>
+      </div>
+      <div class="border-l border-blue-500/30 h-14 hidden md:block"></div>
+      <div class="flex items-center">
+        <h4 id="pa-mtd-percent" class="text-5xl md:text-6xl font-black text-white leading-none tracking-tight">0%</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2.5: Detailed Excel-Style PA Comparison Tables (Premium Redesign) -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Table 1: PA Troubleshooting -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200">
+      <div class="flex items-center justify-between mb-4 border-b border-gray-50 pb-3">
+        <h3 class="text-sm font-bold text-brand-primary flex items-center gap-2">
+          <span class="w-1.5 h-4 bg-brand-primary rounded-full"></span>
+          PA TROUBLESHOOTING
+        </h3>
+        <span class="text-[9px] text-brand-muted font-bold tracking-wider uppercase bg-gray-50 px-2 py-0.5 rounded border border-gray-100">Trouble Log Stats</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-brand-primary text-white text-[10px] font-bold uppercase tracking-wider">
+              <th class="py-2.5 px-3 rounded-l-lg" id="th-trouble-month">MEI</th>
+              <th class="py-2.5 px-3">MOHH</th>
+              <th class="py-2.5 px-3">Downtime (Min)</th>
+              <th class="py-2.5 px-3 rounded-r-lg text-right">PA TROUBLESHOOTING</th>
+            </tr>
+          </thead>
+          <tbody class="text-xs text-brand-dark divide-y divide-gray-100 font-semibold" id="table-trouble-body">
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W1</td><td class="py-2.5 px-3" id="trouble-w1-mohh">-</td><td class="py-2.5 px-3" id="trouble-w1-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="trouble-w1-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W2</td><td class="py-2.5 px-3" id="trouble-w2-mohh">-</td><td class="py-2.5 px-3" id="trouble-w2-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="trouble-w2-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W3</td><td class="py-2.5 px-3" id="trouble-w3-mohh">-</td><td class="py-2.5 px-3" id="trouble-w3-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="trouble-w3-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W4</td><td class="py-2.5 px-3" id="trouble-w4-mohh">-</td><td class="py-2.5 px-3" id="trouble-w4-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="trouble-w4-pa">-</td></tr>
+            <tr class="bg-brand-primary/5 font-bold border-t border-brand-primary/10"><td class="py-2.5 px-3 text-brand-primary font-black">MTD</td><td class="py-2.5 px-3" id="trouble-mtd-mohh">-</td><td class="py-2.5 px-3" id="trouble-mtd-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-black" id="trouble-mtd-pa">-</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Table 2: PA Maintenance -->
+    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200">
+      <div class="flex items-center justify-between mb-4 border-b border-gray-50 pb-3">
+        <h3 class="text-sm font-bold text-brand-primary flex items-center gap-2">
+          <span class="w-1.5 h-4 bg-brand-primary rounded-full"></span>
+          PA MAINTENANCE
+        </h3>
+        <span class="text-[9px] text-brand-muted font-bold tracking-wider uppercase bg-gray-50 px-2 py-0.5 rounded border border-gray-100">Service Log Stats</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-brand-primary text-white text-[10px] font-bold uppercase tracking-wider">
+              <th class="py-2.5 px-3 rounded-l-lg" id="th-maint-month">MEI</th>
+              <th class="py-2.5 px-3">MOHH</th>
+              <th class="py-2.5 px-3">Downtime (Min)</th>
+              <th class="py-2.5 px-3 rounded-r-lg text-right">PA MAINTENANCE</th>
+            </tr>
+          </thead>
+          <tbody class="text-xs text-brand-dark divide-y divide-gray-100 font-semibold" id="table-maint-body">
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W1</td><td class="py-2.5 px-3" id="maint-w1-mohh">-</td><td class="py-2.5 px-3" id="maint-w1-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="maint-w1-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W2</td><td class="py-2.5 px-3" id="maint-w2-mohh">-</td><td class="py-2.5 px-3" id="maint-w2-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="maint-w2-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W3</td><td class="py-2.5 px-3" id="maint-w3-mohh">-</td><td class="py-2.5 px-3" id="maint-w3-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="maint-w3-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-3 text-brand-muted font-bold">W4</td><td class="py-2.5 px-3" id="maint-w4-mohh">-</td><td class="py-2.5 px-3" id="maint-w4-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-bold" id="maint-w4-pa">-</td></tr>
+            <tr class="bg-brand-primary/5 font-bold border-t border-brand-primary/10"><td class="py-2.5 px-3 text-brand-primary font-black">MTD</td><td class="py-2.5 px-3" id="maint-mtd-mohh">-</td><td class="py-2.5 px-3" id="maint-mtd-down">-</td><td class="py-2.5 px-3 text-right text-brand-primary font-black" id="maint-mtd-pa">-</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2.6: Centered PA All Table -->
+  <div class="flex justify-center mb-6">
+    <div class="w-full lg:w-1/2 bg-white rounded-2xl p-5 border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200">
+      <div class="flex items-center justify-between mb-4 border-b border-gray-50 pb-3">
+        <h3 class="text-sm font-bold text-brand-primary flex items-center gap-2">
+          <span class="w-1.5 h-4 bg-brand-primary rounded-full"></span>
+          PA ALL OVERVIEW
+        </h3>
+        <span class="text-[9px] text-brand-muted font-bold tracking-wider uppercase bg-gray-50 px-2 py-0.5 rounded border border-gray-100">Combined Average</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-brand-primary text-white text-[10px] font-bold uppercase tracking-wider">
+              <th class="py-2.5 px-4 rounded-l-lg" id="th-all-month">MEI</th>
+              <th class="py-2.5 px-4 rounded-r-lg text-right">PA ALL</th>
+            </tr>
+          </thead>
+          <tbody class="text-xs text-brand-dark divide-y divide-gray-100 font-semibold" id="table-all-body">
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-4 text-brand-muted font-bold">W1</td><td class="py-2.5 px-4 text-right text-brand-primary font-bold text-sm" id="all-w1-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-4 text-brand-muted font-bold">W2</td><td class="py-2.5 px-4 text-right text-brand-primary font-bold text-sm" id="all-w2-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-4 text-brand-muted font-bold">W3</td><td class="py-2.5 px-4 text-right text-brand-primary font-bold text-sm" id="all-w3-pa">-</td></tr>
+            <tr class="hover:bg-slate-50/50"><td class="py-2.5 px-4 text-brand-muted font-bold">W4</td><td class="py-2.5 px-4 text-right text-brand-primary font-bold text-sm" id="all-w4-pa">-</td></tr>
+            <tr class="bg-brand-primary/5 font-bold border-t border-brand-primary/10"><td class="py-2.5 px-4 text-brand-primary font-black text-sm">MTD</td><td class="py-2.5 px-4 text-right text-brand-primary font-black text-base" id="all-mtd-pa">-</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: Physical Availability Trend Chart -->
+  <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm mb-6">
+    <h3 class="text-lg font-bold text-brand-primary mb-4">Physical Availability Trend</h3>
+    <div class="h-64 w-full">
+      <canvas id="paTrendChartPA"></canvas>
+    </div>
+  </div>
+</div>
+      </div>
+
+      <div id="maintenance-schedule" class="hidden">
+        <div class="space-y-6 w-full pb-10">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-100 pb-4 gap-4">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary">Jadwal Preventive Maintenance</h2>
+      <p class="text-brand-muted text-sm font-medium">Rencana PM 1 Tahun â€” 20 Unit per Bulan (PC & Laptop)</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Month Filter Dropdown -->
+      <div class="relative">
+        <i class="fa-solid fa-calendar-days absolute left-3 top-1/2 -translate-y-1/2 text-brand-primary text-sm"></i>
+        <select id="maintenance-month-filter" onchange="renderMaintenanceTable()"
+          class="pl-10 pr-8 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm font-semibold text-brand-primary bg-white min-w-[240px] appearance-none cursor-pointer">
+          <!-- Options will be populated by JS -->
+        </select>
+        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+      </div>
+      
+      <!-- Tombol Tambah Jadwal -->
+      <button onclick="openMaintenanceModal()" class="bg-brand-primary hover:bg-blue-800 text-white font-bold py-2.5 px-4 rounded-xl shadow-md text-xs flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-plus"></i> Tambah Jadwal
+      </button>
+
+      <!-- Summary Badge -->
+      <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50 border border-blue-100">
+        <i class="fa-solid fa-microchip text-brand-primary text-sm"></i>
+        <span id="maintenance-total-units" class="text-xs font-black text-brand-primary">0 Unit</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Cards Row -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Card: Total Perangkat Terjadwal -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+          <i class="fa-solid fa-desktop text-brand-primary text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Perangkat</span>
+      </div>
+      <p id="mp-total-scheduled" class="text-2xl font-black text-brand-primary">0</p>
+    </div>
+    <!-- Card: Target Bulan Ini -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+          <i class="fa-solid fa-bullseye text-brand-accent text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Target Bulan</span>
+      </div>
+      <p id="mp-active-month" class="text-lg font-black text-brand-accent truncate">-</p>
+    </div>
+    <!-- Card: Selesai -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
+          <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Selesai (Done)</span>
+      </div>
+      <p id="mp-done-count" class="text-2xl font-black text-emerald-500">0</p>
+    </div>
+    <!-- Card: Belum Dikerjakan -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center">
+          <i class="fa-solid fa-clock text-orange-500 text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Pending</span>
+      </div>
+      <p id="mp-pending-count" class="text-2xl font-black text-orange-500">0</p>
+    </div>
+  </div>
+
+  <!-- Maintenance Schedule Table -->
+  <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50/50">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-wrench text-brand-primary"></i>
+        <h3 class="font-bold text-brand-primary uppercase text-xs tracking-widest">Schedule Data Stream</h3>
+      </div>
+      <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+        <!-- Live Search Input for Maintenance Plan -->
+        <div class="relative w-full md:w-64">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+          <input type="text" id="maintenance-search" placeholder="Cari Perangkat / Host / User..."
+            class="pl-9 pr-4 py-2 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-xs w-full transition-all bg-white">
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
+          <span class="text-[10px] text-brand-accent font-black">MANUAL PM PLAN</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-gray-600 border-collapse">
+        <thead class="bg-gray-50/50 text-gray-700 border-b border-gray-100">
+          <tr>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider w-12 text-center whitespace-nowrap">No</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Target Date</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Target Reschedule</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Bulan / Periode</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Host Name</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Assigned To</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Status Maintenance</th>
+            <th class="px-5 py-4 font-bold text-xs uppercase tracking-wider text-center whitespace-nowrap">Keterangan / Tanggal Aktual</th>
+            <th class="px-4 py-3 font-bold text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="maintenance-table-body" class="divide-y divide-gray-50">
+          <tr>
+            <td colspan="9" class="px-6 py-12 text-center text-gray-400">
+              <i class="fa-solid fa-spinner animate-spin text-3xl mb-4"></i>
+              <p>Memuat jadwal maintenance...</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Pop-up: Atur Jadwal Maintenance -->
+<div id="maintenance-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl border border-gray-100 shadow-2xl w-full max-w-lg overflow-hidden animate__animated animate__zoomIn animate__faster">
+    <!-- Modal Header -->
+    <div class="px-6 py-5 bg-[#004684] text-white flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-calendar-plus text-[#FDB813]"></i>
+        <h3 class="font-bold text-sm tracking-wider uppercase">Atur Jadwal PM</h3>
+      </div>
+      <button onclick="closeMaintenanceModal()" class="text-white/80 hover:text-white transition-colors">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+    
+    <!-- Modal Body (Form) -->
+    <form id="maintenance-form" onsubmit="saveMaintSchedule(event)" class="p-6 space-y-4">
+      <!-- Hidden Input for Serial -->
+      <input type="hidden" id="maint-sn">
+      
+      <!-- Pilih Perangkat -->
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Perangkat (Host Name - Serial Number)</label>
+        <select id="maint-asset-select" onchange="onMaintDeviceSelectChange()" required
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm font-semibold text-gray-700 bg-white">
+          <!-- Options will be populated dynamically from eligible assets -->
+        </select>
+      </div>
+
+      <!-- Target Date -->
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Target Date (Tanggal Rencana PM)</label>
+        <input type="date" id="maint-target-date" required
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FDB813] focus:border-transparent outline-none text-sm font-semibold text-gray-700">
+      </div>
+
+      <!-- Target Reschedule (Opsional) -->
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Target Reschedule (Opsional)</label>
+        <input type="date" id="maint-target-reschedule"
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FDB813] focus:border-transparent outline-none text-sm font-semibold text-gray-700">
+      </div>
+
+      <!-- Bulan / Periode -->
+      <div>
+        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Bulan / Periode</label>
+        <select id="maint-periode" required
+          class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FDB813] focus:border-transparent outline-none text-sm font-semibold text-gray-700">
+          <option value="Mei 2026">Januari 2026</option>
+          <option value="Februari 2026">Februari 2026</option>
+          <option value="Maret 2026">Maret 2026</option>
+          <option value="April 2026">April 2026</option>
+          <option value="Mei 2026">Mei 2026</option>
+          <option value="Juni 2026">Juni 2026</option>
+          <option value="Juli 2026">Juli 2026</option>
+          <option value="Agustus 2026">Agustus 2026</option>
+          <option value="September 2026">September 2026</option>
+          <option value="Oktober 2026">Oktober 2026</option>
+          <option value="November 2026">November 2026</option>
+          <option value="Desember 2026">Desember 2026</option>
+        </select>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+        <button type="button" onclick="closeMaintenanceModal()"
+          class="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-xs font-bold text-gray-500 uppercase tracking-wider transition-colors">
+          Batal
+        </button>
+        <button type="submit"
+          class="px-5 py-2.5 rounded-xl bg-[#004684] hover:bg-blue-800 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md">
+          Simpan Rencana Jadwal
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+      </div>
+
+      <div id="evidence-section" class="hidden">
+        <div id="evidence-content" class="space-y-6 w-full pb-10">
+  
+  <!-- Header Title -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 border-b border-gray-100 pb-5">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary tracking-tight">Evidence Activity</h2>
+      <p class="text-xs text-brand-muted mt-1">Dokumentasi Foto dan Verifikasi Operasional Harian Lapangan</p>
+    </div>
+    
+    <!-- Quick Stats Widget -->
+    <div class="flex items-center gap-3">
+      <div class="bg-white border border-gray-100 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+        <div class="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+          <i class="fa-solid fa-file-circle-check text-base"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Total Terverifikasi</p>
+          <p id="evidence-stats-count" class="text-lg font-extrabold text-brand-primary leading-none">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filters Container -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col md:flex-row md:items-center gap-4">
+    <!-- Live Search -->
+    <div class="relative flex-1">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+      <input type="text" id="evidence-search-input" placeholder="Cari berdasarkan Host Name, User, atau Engineer..."
+        class="w-full pl-11 pr-4 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all placeholder:text-gray-400">
+    </div>
+    
+    <!-- Category Filter Dropdown -->
+    <div class="w-full md:w-56">
+      <select id="evidence-category-filter"
+        class="w-full px-3 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all text-gray-600 bg-white">
+        <option value="ALL">Semua Kategori</option>
+        <option value="Troubleshooting">Troubleshooting</option>
+        <option value="Service">Service</option>
+        <option value="Other">Other / Lainnya</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Evidence Grid Container -->
+  <div id="evidence-grid-wrapper" class="relative min-h-[300px]">
+    <!-- Loading State -->
+    <div id="evidence-loading" class="flex flex-col items-center justify-center py-16 gap-3">
+      <i class="fa-solid fa-spinner animate-spin text-3xl text-brand-accent"></i>
+      <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Memuat Dokumentasi Foto...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div id="evidence-empty" class="hidden flex-col items-center justify-center py-20 text-center">
+      <div class="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center text-brand-primary text-3xl mb-4 shadow-inner">
+        <i class="fa-solid fa-images text-blue-300"></i>
+      </div>
+      <h3 class="text-base font-bold text-brand-primary">Tidak Ada Foto Bukti</h3>
+      <p class="text-xs text-gray-400 mt-1 max-w-sm">Belum ada aktivitas yang diunggah bukti fotonya untuk pencarian ini.</p>
+    </div>
+
+    <!-- Grid Gallery -->
+    <div id="evidence-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Cards will be dynamically rendered here -->
+    </div>
+  </div>
+
+</div>
+
+      </div>
+
+      <div id="part-accessories-section" class="hidden">
+        <div id="part-accessories-content" class="space-y-6 w-full pb-10">
+  
+  <!-- Header Title -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 border-b border-gray-100 pb-5">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary tracking-tight">Part & Accessories</h2>
+      <p class="text-xs text-brand-muted mt-1">Manajemen Inventaris Aksesori Komputer & Komponen Pendukung IT</p>
+    </div>
+    
+    <!-- Action Button & Stats -->
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Total Stock Widget -->
+      <div class="bg-white border border-gray-100 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+        <div class="p-2 rounded-lg bg-blue-50 text-brand-primary">
+          <i class="fa-solid fa-boxes-stacked text-base"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Total Jenis</p>
+          <p id="acc-stats-count" class="text-lg font-extrabold text-brand-primary leading-none">0</p>
+        </div>
+      </div>
+
+      <button onclick="openAccessoryModal()" 
+        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-brand-primary to-blue-800 text-white hover:from-brand-primary hover:to-blue-900 transition-all duration-300 text-sm font-bold shadow-lg shadow-blue-500/10">
+        <i class="fa-solid fa-plus text-xs"></i>
+        Tambah Aksesori
+      </button>
+    </div>
+  </div>
+
+  <!-- Search & Filters Container -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col md:flex-row md:items-center gap-4">
+    <!-- Live Search -->
+    <div class="relative flex-1">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+      <input type="text" id="acc-search-input" placeholder="Cari berdasarkan nama aksesori atau Serial Number..."
+        class="w-full pl-11 pr-4 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all placeholder:text-gray-400">
+    </div>
+    
+    <!-- Category Filter Dropdown -->
+    <div class="w-full md:w-56">
+      <select id="acc-category-filter"
+        class="w-full px-3 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all text-gray-600 bg-white">
+        <option value="ALL">Semua Kategori</option>
+        <option value="Monitor">Monitor</option>
+        <option value="Keyboard">Keyboard</option>
+        <option value="Mouse">Mouse</option>
+        <option value="Adapter">Adapter & Charger</option>
+        <option value="Storage">External Storage / SSD</option>
+        <option value="Cable">Cable / Connector</option>
+        <option value="Other">Lainnya</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Accessories Table Wrapper -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-blue-500/5 border-b border-gray-100">
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center w-16">No</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Nama Aksesori</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Serial Number</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Kategori</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center">Stok</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Assigned To</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center">Status</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Keterangan</th>
+          </tr>
+        </thead>
+        <tbody id="accessories-table-body" class="divide-y divide-gray-50">
+          <tr>
+            <td colspan="8" class="px-6 py-12 text-center text-gray-400">
+              <i class="fa-solid fa-spinner animate-spin mr-2"></i> Memuat Data Aksesori...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Accessory Addition Modal -->
+  <div id="accessory-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-gray-100 transform transition-transform duration-300 scale-100">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-brand-primary text-white flex justify-between items-center">
+        <div>
+          <h3 class="text-base font-extrabold tracking-tight">Tambah Aksesori Baru</h3>
+          <p class="text-[10px] text-blue-200 font-semibold tracking-wider uppercase mt-0.5">IT Accessories Inventory</p>
+        </div>
+        <button onclick="closeAccessoryModal()" class="text-white/80 hover:text-white transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body Form -->
+      <form id="accessory-form" onsubmit="handleAccessorySubmit(event)" class="p-6 space-y-4">
+        <!-- Field: Name -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nama Aksesori <span class="text-rose-500">*</span></label>
+          <input type="text" id="acc-name" required placeholder="Contoh: Mouse Logitech G102, Monitor Dell 24 Inch"
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+        </div>
+
+        <!-- Two Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Field: SN -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Serial Number</label>
+            <input type="text" id="acc-sn" placeholder="Contoh: SN-123456 (Opsional)"
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+          </div>
+          <!-- Field: Category -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Kategori <span class="text-rose-500">*</span></label>
+            <select id="acc-category" required
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all bg-white text-gray-600">
+              <option value="Monitor">Monitor</option>
+              <option value="Keyboard">Keyboard</option>
+              <option value="Mouse">Mouse</option>
+              <option value="Adapter">Adapter & Charger</option>
+              <option value="Storage">External Storage / SSD</option>
+              <option value="Cable">Cable / Connector</option>
+              <option value="Other">Lainnya</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Two Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Field: Stock -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Total Stok <span class="text-rose-500">*</span></label>
+            <input type="number" id="acc-stock" required min="1" value="1"
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+          </div>
+          <!-- Field: Status -->
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Status IT</label>
+            <select id="acc-status" required
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all bg-white text-gray-600">
+              <option value="Available">Available (In Stock)</option>
+              <option value="In Use">In Use (Aktif)</option>
+              <option value="Low Stock">Low Stock (Limit)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Field: Assigned To -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Assigned To (PIC)</label>
+          <input type="text" id="acc-assigned" placeholder="Contoh: Muhammad Taufik, Guest, atau - (Default)"
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+        </div>
+
+        <!-- Field: Notes -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Notes / Catatan</label>
+          <textarea id="acc-notes" rows="2" placeholder="Detail tambahan atau keterangan rak penyimpanan..."
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all resize-none"></textarea>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <button type="button" onclick="closeAccessoryModal()"
+            class="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl transition-all">
+            Batal
+          </button>
+          <button type="submit"
+            class="px-5 py-2 text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-blue-800 rounded-xl shadow-md transition-all">
+            Simpan Aksesori
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+      </div>
+
+      <div id="loan-section" class="hidden">
+        <div id="loan-content" class="space-y-6 w-full pb-10">
+  
+  <!-- Header Title -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 border-b border-gray-100 pb-5">
+    <div>
+      <h2 class="text-2xl font-bold text-brand-primary tracking-tight">Pencatatan Peminjaman Aset</h2>
+      <p class="text-xs text-brand-muted mt-1">Registrasi dan Rekam Jejak Peminjaman Laptop/PC & Aset IT Kantor</p>
+    </div>
+    
+    <!-- Actions & Stats -->
+    <div class="flex flex-wrap items-center gap-3">
+      <!-- Active Loans Stats -->
+      <div class="bg-white border border-gray-100 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+        <div class="p-2 rounded-lg bg-amber-50 text-amber-600">
+          <i class="fa-solid fa-handshake-angle text-base"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Aktif Dipinjam</p>
+          <p id="loan-stats-active" class="text-lg font-extrabold text-amber-600 leading-none">0</p>
+        </div>
+      </div>
+
+      <!-- Returned Stats -->
+      <div class="bg-white border border-gray-100 rounded-xl px-4 py-2.5 flex items-center gap-3 shadow-sm">
+        <div class="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+          <i class="fa-solid fa-circle-check text-base"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Sudah Kembali</p>
+          <p id="loan-stats-returned" class="text-lg font-extrabold text-emerald-600 leading-none">0</p>
+        </div>
+      </div>
+
+      <button onclick="openLoanModal()" 
+        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-brand-primary to-blue-800 text-white hover:from-brand-primary hover:to-blue-900 transition-all duration-300 text-sm font-bold shadow-lg shadow-blue-500/10">
+        <i class="fa-solid fa-key text-xs"></i>
+        Pinjam Aset
+      </button>
+    </div>
+  </div>
+
+  <!-- Search & Filters Container -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col md:flex-row md:items-center gap-4">
+    <!-- Live Search -->
+    <div class="relative flex-1">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+      <input type="text" id="loan-search-input" placeholder="Cari peminjaman berdasarkan Nama Borrower, Aset, atau Departemen..."
+        class="w-full pl-11 pr-4 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all placeholder:text-gray-400">
+    </div>
+    
+    <!-- Status Filter Dropdown -->
+    <div class="w-full md:w-56">
+      <select id="loan-status-filter"
+        class="w-full px-3 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-brand-accent focus:border-transparent outline-none text-sm transition-all text-gray-600 bg-white">
+        <option value="ALL">Semua Status</option>
+        <option value="Dipinjam">Aktif Dipinjam</option>
+        <option value="Kembali">Sudah Kembali</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table Wrapper -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-blue-500/5 border-b border-gray-100">
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center w-16">No</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Tgl Pinjam</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Nama Aset / SN</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Peminjam (Borrower)</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Departemen</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Estimasi Kembali</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Tgl Pengembalian</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center">Status</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider">Approved By</th>
+            <th class="px-6 py-4 font-bold text-brand-primary text-xs uppercase tracking-wider text-center w-32">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="loans-table-body" class="divide-y divide-gray-50">
+          <tr>
+            <td colspan="10" class="px-6 py-12 text-center text-gray-400">
+              <i class="fa-solid fa-spinner animate-spin mr-2"></i> Memuat Log Peminjaman Aset...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Loan Addition Modal -->
+  <div id="loan-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-gray-100 transform transition-transform duration-300 scale-100">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-brand-primary text-white flex justify-between items-center">
+        <div>
+          <h3 class="text-base font-extrabold tracking-tight">Form Peminjaman Aset</h3>
+          <p class="text-[10px] text-blue-200 font-semibold tracking-wider uppercase mt-0.5">Asset Borrowing Registry</p>
+        </div>
+        <button onclick="closeLoanModal()" class="text-white/80 hover:text-white transition-colors">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body Form -->
+      <form id="loan-form" onsubmit="handleLoanSubmit(event)" class="p-6 space-y-4">
+        
+        <!-- Field: Date (Auto today) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tanggal Pinjam <span class="text-rose-500">*</span></label>
+            <input type="date" id="loan-date" required
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Estimasi Kembali <span class="text-rose-500">*</span></label>
+            <input type="date" id="loan-est-date" required
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+          </div>
+        </div>
+
+        <!-- Field: Asset Selection -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nama Aset / Serial Number <span class="text-rose-500">*</span></label>
+          <input type="text" id="loan-asset-name" required placeholder="Contoh: BTSJKOPNB22017 (Dell Latitude 7330)"
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+        </div>
+
+        <!-- Field: Borrower Name & Dept -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Peminjam <span class="text-rose-500">*</span></label>
+            <input type="text" id="loan-borrower" required placeholder="Contoh: Bambang Iskandar"
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Departemen <span class="text-rose-500">*</span></label>
+            <input type="text" id="loan-dept" required placeholder="Contoh: SINS, PLANT, MIO"
+              class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+          </div>
+        </div>
+
+        <!-- Field: Approved By -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Pemberi Izin (Approved By)</label>
+          <input type="text" id="loan-approved" placeholder="Contoh: Muhammad Taufik (IT Engineer)"
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all">
+        </div>
+
+        <!-- Field: Notes -->
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Catatan / Keperluan Peminjaman</label>
+          <textarea id="loan-notes" rows="2" placeholder="Contoh: Keperluan kunjungan site luar kota selama 3 hari..."
+            class="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all resize-none"></textarea>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <button type="button" onclick="closeLoanModal()"
+            class="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-50 rounded-xl transition-all">
+            Batal
+          </button>
+          <button type="submit"
+            class="px-5 py-2 text-xs font-bold uppercase tracking-wider text-white bg-brand-primary hover:bg-blue-800 rounded-xl shadow-md transition-all">
+            Daftarkan Peminjaman
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+      </div>
+
+      <div id="settings-content" class="hidden space-y-6 max-w-7xl mx-auto">
+        <h2 class="text-2xl font-bold text-brand-primary mb-4">Settings</h2>
+        <p class="text-brand-muted">Settings module coming soon...</p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Tautan ke file JavaScript eksternal -->
+  <script src="js/api.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>
+
